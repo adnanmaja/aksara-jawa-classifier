@@ -7,14 +7,19 @@ channels:
   - https://repo.anaconda.com/pkgs/r
   - https://repo.anaconda.com/pkgs/msys2
 dependencies:
+  - annotated-types=0.6.0=py312haa95532_0
+  - anyio=4.7.0=py312haa95532_0
   - blas=1.0=mkl
   - brotli-python=1.0.9=py312h5da7b33_9
   - brotlicffi=1.0.9.2=py312h5da7b33_1
   - bzip2=1.0.8=h2bbff1b_6
   - ca-certificates=2025.2.25=haa95532_0
+  - cairo=1.16.0=h85cdd14_6
   - certifi=2025.6.15=py312haa95532_0
   - cffi=1.17.1=py312h827c3e9_1
   - charset-normalizer=3.3.2=pyhd3eb1b0_0
+  - click=8.1.8=py312haa95532_0
+  - colorama=0.4.6=py312haa95532_0
   - contourpy=1.3.1=py312h214f63a_0
   - cuda-cccl=12.9.27=0
   - cuda-cccl_win-64=12.9.27=0
@@ -30,14 +35,25 @@ dependencies:
   - cuda-runtime=11.8.0=0
   - cuda-version=12.9=3
   - cycler=0.11.0=pyhd3eb1b0_0
+  - eigen=3.4.0=h59b6b97_0
   - expat=2.7.1=h8ddb27b_0
+  - fastapi=0.112.2=py312haa95532_0
   - filelock=3.17.0=py312haa95532_0
+  - fontconfig=2.14.1=hb33846d_3
   - fonttools=4.55.3=py312h827c3e9_0
   - freeglut=3.4.0=h8a1e904_1
   - freetype=2.13.3=h0620614_0
   - giflib=5.2.2=h7edc060_0
   - gmp=6.3.0=h537511b_0
   - gmpy2=2.2.1=py312h827c3e9_0
+  - graphite2=1.3.14=hd77b12b_1
+  - gst-plugins-base=1.24.12=h91a6125_1
+  - gstreamer=1.24.12=hfb93a4f_1
+  - gstreamer-orc=0.4.41=ha00e802_0
+  - h11=0.16.0=py312haa95532_0
+  - harfbuzz=10.2.0=he2f9f60_1
+  - hdf5=1.14.5=ha36df97_2
+  - icc_rt=2022.1.0=h6049295_2
   - icu=73.1=h6c2663c_0
   - idna=3.7=py312haa95532_0
   - intel-openmp=2023.1.0=h59b6b97_46320
@@ -47,6 +63,7 @@ dependencies:
   - krb5=1.20.1=h5b6d351_0
   - lcms2=2.16=h62be587_1
   - lerc=4.0.0=h5da7b33_0
+  - libabseil=20250127.0=cxx17_h52369b4_0
   - libcublas=11.11.3.6=0
   - libcublas-dev=11.11.3.6=0
   - libcufft=10.9.0.58=0
@@ -59,6 +76,8 @@ dependencies:
   - libcusparse-dev=11.7.5.86=0
   - libdeflate=1.22=h5bf469e_0
   - libffi=3.4.4=hd77b12b_1
+  - libglib=2.78.4=ha17d25a_0
+  - libiconv=1.16=h2bbff1b_3
   - libjpeg-turbo=2.0.0=h196d8e1_0
   - libnpp=11.8.0.86=0
   - libnpp-dev=11.8.0.86=0
@@ -66,10 +85,12 @@ dependencies:
   - libnvjpeg-dev=11.9.0.86=0
   - libpng=1.6.39=h8cc25b3_0
   - libpq=17.4=h70ee33d_0
+  - libprotobuf=5.29.3=h65a231f_1
   - libtiff=4.7.0=h404307b_0
   - libuv=1.48.0=h827c3e9_0
   - libwebp=1.3.2=h18467be_1
   - libwebp-base=1.3.2=h3d04722_1
+  - libxml2=2.13.8=h866ff63_0
   - lz4-c=1.9.4=h2bbff1b_1
   - markupsafe=3.0.2=py312h827c3e9_0
   - matplotlib=3.10.0=py312haa95532_0
@@ -84,18 +105,24 @@ dependencies:
   - networkx=3.4.2=py312haa95532_0
   - numpy=2.3.1=py312h5f75535_0
   - numpy-base=2.3.1=py312h23d94f8_0
+  - opencv=4.10.0=py312h6cb580c_6
   - openjpeg=2.5.2=h9b5d1b5_1
   - openssl=3.0.16=h3f729d1_0
   - packaging=24.2=py312haa95532_0
+  - pcre2=10.42=h0ff8eda_1
   - pillow=11.1.0=py312hea0d53e_1
   - pip=25.1=pyhc872135_2
+  - pixman=0.40.0=h2bbff1b_1
   - pycparser=2.21=pyhd3eb1b0_0
+  - pydantic=2.11.7=py312haa95532_0
+  - pydantic-core=2.33.2=py312h215eeae_0
   - pyparsing=3.2.0=py312haa95532_0
   - pyqt=6.7.1=py312h5da7b33_1
   - pyqt6-sip=13.9.1=py312h827c3e9_1
   - pysocks=1.7.1=py312haa95532_0
   - python=3.12.11=h716150d_0
   - python-dateutil=2.9.0post0=py312haa95532_2
+  - python-multipart=0.0.20=py312haa95532_0
   - pytorch=2.5.1=py3.12_cuda11.8_cudnn9_0
   - pytorch-cuda=11.8=h24eeafa_6
   - pytorch-mutex=1.0=cuda
@@ -110,15 +137,20 @@ dependencies:
   - setuptools=72.1.0=py312haa95532_0
   - sip=6.10.0=py312h5da7b33_0
   - six=1.17.0=py312haa95532_0
+  - sniffio=1.3.0=py312haa95532_0
   - sqlite=3.45.3=h2bbff1b_0
+  - starlette=0.38.2=py312haa95532_0
   - sympy=1.13.3=py312haa95532_1
   - tbb=2021.8.0=h59b6b97_0
   - tk=8.6.14=h5e9d12e_1
   - tornado=6.5.1=py312h827c3e9_0
+  - typing-extensions=4.12.2=py312haa95532_0
+  - typing-inspection=0.4.0=py312haa95532_0
   - typing_extensions=4.12.2=py312haa95532_0
   - tzdata=2025b=h04d1e81_0
   - unicodedata2=15.1.0=py312h827c3e9_1
   - urllib3=2.5.0=py312haa95532_0
+  - uvicorn=0.32.1=py312haa95532_0
   - vc=14.42=haa95532_5
   - vs2015_runtime=14.42.34433=hbfb602d_5
   - wheel=0.45.1=py312haa95532_0
@@ -128,5 +160,6 @@ dependencies:
   - zlib=1.2.13=h8cc25b3_1
   - zstd=1.5.6=h8880b57_0
   - pip:
+      - split-folders==0.5.1
       - torchvision==0.20.1
 prefix: D:\Anaconda\envs\aksara
