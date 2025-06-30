@@ -73,41 +73,6 @@ optimizer = optim.Adam(model.parameters(), lr=0.001)
 print(f"Training on {device}")
 print(f"Number of classes: {num_classes}")
 
-# 4. Debug what's happening
-print("Checking train_loader...")
-sample_batch = next(iter(train_loader))
-print(f"train_loader returns {len(sample_batch)} items")
-print(f"First item type: {type(sample_batch[0])}")
-print(f"First item: {sample_batch[0]}")
-if len(sample_batch) > 1:
-    print(f"Second item type: {type(sample_batch[1])}")
-    print(f"Second item: {sample_batch[1]}")
-
-# Let's also check the dataset directly
-print("\nChecking dataset directly...")
-sample_data = train_dataset[0]
-print(f"Dataset returns {len(sample_data)} items")
-print(f"First item type: {type(sample_data[0])}")
-if hasattr(sample_data[0], 'shape'):
-    print(f"First item shape: {sample_data[0].shape}")
-else:
-    print(f"First item: {sample_data[0]}")
-
-# Check if images exist in the folder
-import os
-print(f"\nChecking folder structure...")
-print(f"Directory exists: {os.path.exists(datadir)}")
-if os.path.exists(datadir):
-    print(f"Contents: {os.listdir(datadir)}")
-
-# Try to check one more level down
-try:
-    subfolders = [f for f in os.listdir(datadir) if os.path.isdir(os.path.join(datadir, f))]
-    if subfolders:
-        first_subfolder = os.path.join(datadir, subfolders[0])
-        print(f"First subfolder contents: {os.listdir(first_subfolder)[:5]}")  # Show first 5 files
-except:
-    print("Could not check subfolder contents")
 
 # 4. Training loop
 num_epochs = 10
@@ -157,5 +122,5 @@ accuracy = 100 * correct / total
 print(f'Test Accuracy: {accuracy:.2f}%')
 
 # 6. Save model
-torch.save(model.state_dict(), 'simple_cnn.pth')
-print('Model saved!')
+# torch.save(model.state_dict(), 'simple_cnn.pth')
+# print('Model saved!')
