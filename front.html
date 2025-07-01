@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aksara Jawa OCR</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #4a5568;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: #718096;
+            font-size: 1.1rem;
+        }
+
+        .upload-section {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e0;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-section:hover {
+            border-color: #667eea;
+            background: #eef2ff;
+            transform: translateY(-2px);
+        }
+
+        .upload-section.dragover {
+            border-color: #667eea;
+            background: #eef2ff;
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: #a0aec0;
+            margin-bottom: 20px;
+        }
+
+        .upload-text {
+            font-size: 1.2rem;
+            color: #4a5568;
+            margin-bottom: 10px;
+        }
+
+        .upload-subtext {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .preview-section {
+            display: none;
+            margin-bottom: 30px;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .results-section {
+            display: none;
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .results-header {
+            font-size: 1.5rem;
+            color: #4a5568;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .confidence-badge {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .prediction-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .prediction-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease;
+        }
+
+        .prediction-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .character {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4a5568;
+            margin-bottom: 5px;
+        }
+
+        .transliteration {
+            color: #667eea;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .processing {
+            text-align: center;
+            padding: 40px;
+            color: #718096;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e2e8f0;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .reset-btn {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .reset-btn:hover {
+            background: #c53030;
+            transform: translateY(-1px);
+        }
+
+        .metadata {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .metadata h3 {
+            color: #4a5568;
+            margin-bottom: 10px;
+        }
+
+        .metadata-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .metadata-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AKSARA JAWA OCR</h1>
+            <p>Upload your handwritten Javanese script image for recognition</p>
+        </div>
+
+        <div class="upload-section" id="uploadSection">
+            <div class="upload-icon">📸</div>
+            <div class="upload-text">Drop your image here or click to browse</div>
+            <div class="upload-subtext">Supports JPG, PNG, WebP files up to 10MB</div>
+            <input type="file" id="fileInput" class="file-input" accept="image/*">
+            <button class="btn" onclick="document.getElementById('fileInput').click()">
+                Choose File
+            </button>
+        </div>
+
+        <div class="preview-section" id="previewSection">
+            <img id="imagePreview" class="image-preview" alt="Uploaded image preview">
+            <div style="text-align: center;">
+                <button class="btn" onclick="processImage()">Process Image</button>
+                <button class="reset-btn" onclick="resetInterface()">Reset</button>
+            </div>
+        </div>
+
+        <div class="processing" id="processingSection" style="display: none;">
+            <div class="spinner"></div>
+            <p>Processing your Javanese script...</p>
+        </div>
+
+        <div class="results-section" id="resultsSection">
+            <div class="results-header">
+                <span>Recognition Results</span>
+            </div>
+            
+            <div class="prediction-grid" id="predictionGrid">
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let uploadedImage = null;
+
+        // File input handling
+        const fileInput = document.getElementById('fileInput');
+        const uploadSection = document.getElementById('uploadSection');
+        const previewSection = document.getElementById('previewSection');
+        const imagePreview = document.getElementById('imagePreview');
+        const processingSection = document.getElementById('processingSection');
+        const resultsSection = document.getElementById('resultsSection');
+
+        fileInput.addEventListener('change', handleFileSelect);
+        uploadSection.addEventListener('click', () => fileInput.click());
+        uploadSection.addEventListener('dragover', handleDragOver);
+        uploadSection.addEventListener('dragleave', handleDragLeave);
+        uploadSection.addEventListener('drop', handleDrop);
+
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (file) {
+                displayImagePreview(file);
+            }
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            uploadSection.classList.add('dragover');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            uploadSection.classList.remove('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            uploadSection.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                displayImagePreview(file);
+            }
+        }
+
+        function displayImagePreview(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imagePreview.src = e.target.result;
+                uploadedImage = file;
+                uploadSection.style.display = 'none';
+                previewSection.style.display = 'block';
+                resultsSection.style.display = 'none';
+                processingSection.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function processImage() {
+            if (!uploadedImage) return;
+
+            // Hide preview and show processing
+            previewSection.style.display = 'none';
+            processingSection.style.display = 'block';
+            resultsSection.style.display = 'none';
+
+            // API call
+            await callOCRAPI(uploadedImage);
+
+        }
+
+        async function callOCRAPI(imageFile) {
+            const formData = new FormData();
+            formData.append('file', imageFile); // 'file' should match the name your backend expects for the file upload
+            
+            try {
+                // Replace '/api/ocr' with your actual backend API endpoint
+                const response = await fetch('http://localhost:8000/predict', { 
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const results = await response.json();
+                
+                // Assuming your API returns results in the format expected by displayResults
+                // e.g., { predictions: [{ character: 'ꦲ', transliteration: 'ha', confidence: 0.95 }, ...] }
+                displayResults(results.prediction); 
+            } catch (error) {
+                console.error('OCR API Error:', error);
+                // You can add user-friendly error messages here
+                alert('Failed to process image. Please try again.');
+                resetInterface(); // Reset interface on error
+            }
+        }
+
+        function simulateOCRResults() {
+            // Mock results - replace with actual OCR API response
+            const mockResults = [
+                { character: 'ꦲ', transliteration: 'ha', confidence: 0.95 },
+                { character: 'ꦤ', transliteration: 'na', confidence: 0.92 },
+                { character: 'ꦒ', transliteration: 'ga', confidence: 0.88 },
+                { character: 'ꦫ', transliteration: 'ra', confidence: 0.94 },
+                { character: 'ꦮ', transliteration: 'wa', confidence: 0.90 },
+            ];
+
+            displayResults(mockResults);
+        }
+
+        function displayResults(predictions) { // 'predictions' is now the array of strings, e.g., ["ha", "na", ...]
+            const predictionGrid = document.getElementById('predictionGrid');
+            
+            // Clear previous results
+            predictionGrid.innerHTML = '';
+
+            // Display character predictions (now just transliterations)
+            predictions.forEach(transliteration => { // 'transliteration' is directly the string value (e.g., "ha")
+                const item = document.createElement('div');
+                item.className = 'prediction-item';
+                item.innerHTML = `
+                    <div class="character">${transliteration}</div>
+                `;
+                predictionGrid.appendChild(item);
+            });
+
+            // Show results
+            processingSection.style.display = 'none';
+            resultsSection.style.display = 'block';
+        }
+
+        function resetInterface() {
+            uploadSection.style.display = 'block';
+            previewSection.style.display = 'none';
+            processingSection.style.display = 'none';
+            resultsSection.style.display = 'none';
+            fileInput.value = '';
+            uploadedImage = null;
+        }
+
+        // TODO: Replace simulateOCRResults with actual API call
+        // Example API integration:
+        /*
+        async function callOCRAPI(imageFile) {
+            const formData = new FormData();
+            formData.append('image', imageFile);
+            
+            try {
+                const response = await fetch('/api/ocr', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const results = await response.json();
+                displayResults(results.predictions);
+            } catch (error) {
+                console.error('OCR API Error:', error);
+                // Handle error
+            }
+        }
+        */
+    </script>
+</body>
+</html>

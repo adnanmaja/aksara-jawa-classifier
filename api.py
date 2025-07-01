@@ -8,14 +8,24 @@ from torchvision.models import resnet18
 from segment_characters import segment_characters
 from torchvision import transforms
 import numpy as np
-import cv2
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 num_classes = 20
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = resnet18(weights=False)
 model.fc = nn.Linear(model.fc.in_features, num_classes)
 model.load_state_dict(torch.load("aksara_model.pth", map_location="cpu"))
+model.to(device)
 model.eval()
 
 label_map = [
@@ -33,31 +43,19 @@ transform = transforms.Compose([
 ])
 
 
-char_imgs = segment_characters("test_1.png")
-
-for i, img in enumerate(char_imgs):
-    img.save(f"char_{i}.png")
-
-
-for img in char_imgs:
-    tensor = transform(img).unsqueeze(0)
-    outputs = model(tensor)
-    pred_idx = torch.argmax(outputs, dim=1).item()
-    pred_label = label_map[pred_idx]
-    print(pred_label)
-
-
-
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
     img_bytes = await file.read()
-    image = Image.open(io.BytesIO(img_bytes)).convert("RGB")
-    tensor = transform(image).unsqueeze(0) 
-    
-    with torch.no_grad():
-        outputs = model(tensor)
-        pred_idx = torch.argmax(outputs, dim=1).item()
-        pred_label = label_map[pred_idx]
+    pil_image = Image.open(io.BytesIO(img_bytes)).convert("RGB")
+    char_imgs = segment_characters(pil_image)  # Now works with updated function
 
-    return { "prediction": pred_idx,
-        "label": pred_label}
+    results = []
+    for img in char_imgs:
+        tensor = transform(img).unsqueeze(0).to(device)
+        with torch.no_grad():
+            outputs = model(tensor)
+            pred_idx = torch.argmax(outputs, dim=1).item()
+            pred_label = label_map[pred_idx]
+            results.append(pred_label)
+
+    return {"prediction": results}
