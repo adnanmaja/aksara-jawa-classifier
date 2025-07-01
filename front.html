@@ -259,7 +259,7 @@
             <div class="upload-text">Drop your image here or click to browse</div>
             <div class="upload-subtext">Supports JPG, PNG, WebP files up to 10MB</div>
             <input type="file" id="fileInput" class="file-input" accept="image/*">
-            <button class="btn" onclick="document.getElementById('fileInput').click()">
+            <button class="btn">
                 Choose File
             </button>
         </div>
@@ -284,7 +284,8 @@
             
             <div class="prediction-grid" id="predictionGrid">
             </div>
-
+            
+            <button class="reset-btn" onclick="resetInterface()">Back</button>
         </div>
     </div>
 
@@ -415,6 +416,7 @@
             });
 
             // Show results
+            uploadSection.style.display = 'block';
             processingSection.style.display = 'none';
             resultsSection.style.display = 'block';
         }
