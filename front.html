@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aksara Jawa OCR</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <link rel="stylesheet" href="your-styles.css">
     <style>
         * {
             margin: 0;
@@ -13,32 +16,35 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #A2CC8A 0%, #4DAF7C 100%);
             min-height: 100vh;
             padding: 20px;
             color: #333;
         }
 
         .container {
-            max-width: 1000px;
+            width: 96%;
+            height: 98%;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
+            background: #f9f9f9;
             backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 30px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            flex-grow: 1;
+
         }
 
         .header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 120px;
         }
 
         .header h1 {
-            font-size: 2.5rem;
+            font-size: 4rem;
             color: #4a5568;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #667eea, #4DAF7C);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -46,15 +52,17 @@
 
         .header p {
             color: #718096;
-            font-size: 1.1rem;
+            font-size: 1.8rem;
         }
 
         .upload-section {
             background: #f8fafc;
-            border: 2px dashed #cbd5e0;
+            margin: 0 auto;
+            border: 3px dashed #cbd5e0;
             border-radius: 15px;
             padding: 40px;
             text-align: center;
+            width: 65%;
             margin-bottom: 30px;
             transition: all 0.3s ease;
             cursor: pointer;
@@ -73,20 +81,20 @@
         }
 
         .upload-icon {
-            font-size: 3rem;
+            font-size: 4rem;
             color: #a0aec0;
             margin-bottom: 20px;
         }
 
         .upload-text {
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             color: #4a5568;
             margin-bottom: 10px;
         }
 
         .upload-subtext {
             color: #718096;
-            font-size: 0.9rem;
+            font-size: 1rem;
         }
 
         .file-input {
@@ -95,7 +103,7 @@
 
         .btn {
             display: inline-block;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #667eea, #4DAF7C);
             color: white;
             padding: 12px 24px;
             border: none;
@@ -114,14 +122,19 @@
         .preview-section {
             display: none;
             margin-bottom: 30px;
+            align-items: center;
+            justify-content: center;
         }
 
         .image-preview {
             max-width: 100%;
-            max-height: 400px;
+            max-height: 100%;
             border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
         }
 
         .results-section {
@@ -130,6 +143,8 @@
             border-radius: 15px;
             padding: 30px;
             margin-bottom: 20px;
+            width: 65%;
+            margin: 0 auto;
         }
 
         .results-header {
@@ -245,19 +260,80 @@
             padding: 5px 0;
             border-bottom: 1px solid #e2e8f0;
         }
+
+        .footer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 120px;
+        }
+
+        .footer h1 {
+            color: #353030;
+            font-size: 1.3rem;
+            margin-top: 40px;
+            opacity: 0.5;
+        }
+
+        .footer p {
+            font-size: 1rem;
+            color: #353030;
+            opacity: 0.5;
+        }
+
+        .social-links-container {
+            margin-top: 10px; 
+            display: flex;  
+            align-items: center;  
+            gap: 15px;      
+            flex-wrap: wrap;  
+            justify-content: center;
+        }
+
+        .social-item {
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .social-item a {
+            color: #353030; 
+            font-size: 20px; 
+            transition: color 0.3s ease; 
+            opacity: 0.6;
+        }
+
+        .social-item a:hover {
+            color: #007bff; 
+        }
+
+        .social-item a .fa-line:hover {
+            color: #00B900; 
+        }
+
+        .social-item a .fa-linkedin:hover {
+            color: #0A66C2; 
+        }
+
+        .social-item a .fa-github:hover {
+            color: #333; 
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>AKSARA JAWA OCR</h1>
+            <h1>Aksara Jawa OCR</h1>
             <p>Upload your handwritten Javanese script image for recognition</p>
         </div>
 
         <div class="upload-section" id="uploadSection">
             <div class="upload-icon">📸</div>
             <div class="upload-text">Drop your image here or click to browse</div>
-            <div class="upload-subtext">Supports JPG, PNG, WebP files up to 10MB</div>
+            <div class="upload-subtext">Supports JPG, PNG, WebP files</div>
             <input type="file" id="fileInput" class="file-input" accept="image/*">
             <button class="btn">
                 Choose File
@@ -287,7 +363,38 @@
             
             <button class="reset-btn" onclick="resetInterface()">Back</button>
         </div>
+
+        <footer class="footer" id="footerSection">
+            <h1>by Rafa Atmaja</h1>
+            <p>Free for personal and commercial use</p>
+            <p>This project was made as part of my OCR learning, feedback is absolutely welcomed</p>
+            
+            <div class="social-links-container">
+                <div class="social-item">
+                    <a target="_blank" aria-label="Line Profile">
+                        <i class="fa-brands fa-line"></i>
+                    </a>
+                    <p class="social-text">rafaadmaja</p> </div>
+
+
+                <div class="social-item">
+                    <a href="https://www.github.com/adnanmaja/aksara-jawa-classifier" target="_blank" aria-label="GitHub Profile">
+                        <i class="fa-brands fa-github"></i>
+                    </a>
+                    <p class="social-text">adnanmaja</p>
+                </div>
+
+
+                <div class="social-item">
+                    <a href="https://www.linkedin.com/in/rafa-adnan-0329b4321" target="_blank" aria-label="LinkedIn Profile">
+                        <i class="fa-brands fa-linkedin"></i>
+                    </a>
+                    <p class="social-text">Rafa Adnan</p>
+                </div>
+            </div>
+        </footer>
     </div>
+
 
     <script>
         let uploadedImage = null;
@@ -299,6 +406,7 @@
         const imagePreview = document.getElementById('imagePreview');
         const processingSection = document.getElementById('processingSection');
         const resultsSection = document.getElementById('resultsSection');
+        const footerSection = document.getElementById('footerSection')
 
         fileInput.addEventListener('change', handleFileSelect);
         uploadSection.addEventListener('click', () => fileInput.click());
@@ -399,26 +507,37 @@
             displayResults(mockResults);
         }
 
-        function displayResults(predictions) { // 'predictions' is now the array of strings, e.g., ["ha", "na", ...]
+         function displayResults(predictions) {
             const predictionGrid = document.getElementById('predictionGrid');
             
             // Clear previous results
             predictionGrid.innerHTML = '';
 
-            // Display character predictions (now just transliterations)
-            predictions.forEach(transliteration => { // 'transliteration' is directly the string value (e.g., "ha")
-                const item = document.createElement('div');
-                item.className = 'prediction-item';
-                item.innerHTML = `
-                    <div class="character">${transliteration}</div>
-                `;
-                predictionGrid.appendChild(item);
-            });
+            // Assuming 'predictions' is now an array of strings like ["ha", "na", "ca", "ra", "ka"]
+            // Join them into a single string
+            const fullTransliteration = predictions.join(''); // This will create "hanacaraka"
+
+            // Create a single item to display the combined word
+            const item = document.createElement('div');
+            item.className = 'prediction-item'; // You can keep this class or adjust styling if needed
+            item.style.gridColumn = '1 / -1'; // Make it span across all columns
+            item.style.fontSize = '2.5rem'; // Make the font size larger for the full word
+            item.style.padding = '30px'; // Add more padding
+            item.style.fontWeight = 'bold';
+            item.style.color = '#4a5568';
+            item.style.display = 'flex';
+            item.style.justifyContent = 'center';
+            item.style.alignItems = 'center';
+
+            item.innerHTML = `
+                <div class="character">${fullTransliteration}</div>
+            `;
+            predictionGrid.appendChild(item);
 
             // Show results
-            uploadSection.style.display = 'block';
             processingSection.style.display = 'none';
             resultsSection.style.display = 'block';
+            uploadSection.style.display = 'block';
         }
 
         function resetInterface() {
@@ -429,6 +548,8 @@
             fileInput.value = '';
             uploadedImage = null;
         }
+
+        
 
         // TODO: Replace simulateOCRResults with actual API call
         // Example API integration:
