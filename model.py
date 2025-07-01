@@ -73,16 +73,16 @@ train_transform = transforms.Compose([
 ])
 
 
-traindir = "D:/Python/Aksara/data_splits/train"
-valdir = "D:/Python/Aksara/data_splits/val"
-testdir = "D:/Python/Aksara/data_splits/test"
+traindir = "D:/Python/Aksara/data_splits/train" 
+valdir = "D:/Python/Aksara/data_splits/val"     
+testdir = "D:/Python/Aksara/data_splits/test"  
 train_dataset = datasets.ImageFolder(traindir, transform=train_transform)
 test_dataset = datasets.ImageFolder(testdir, transform=transform)
 val_dataset = datasets.ImageFolder(valdir, transform=transform)
 
-train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
-test_loader = DataLoader(test_dataset, batch_size=16, shuffle=False)
-val_loader = DataLoader(val_dataset, batch_size=16, shuffle=False)
+train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
+test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
+val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False)
 
 
 # Setting up the model (ResNet18)

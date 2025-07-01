@@ -1,3 +1,5 @@
 aksara_data/
 data_splits/
 __pycache__/
+javanese_dataset/
+fonts/

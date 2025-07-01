@@ -1,5 +1,31 @@
 import cv2
+import numpy as np
 from PIL import Image
+
+
+def pad_and_resize(image, size=224, pad_color=255):
+    """
+    Resize image while maintaining aspect ratio and pad to square.
+    
+    Args:
+        image: Input image (numpy array or PIL Image)
+        size: Target size (will create size x size image)
+        pad_color: Color for padding (255 for white, 0 for black)
+    
+    Returns:
+        PIL Image: Resized and padded image
+    """
+    img = np.array(image)
+    h, w = img.shape[:2]
+    
+    scale = min((size - 20) / h, (size - 20) / w)
+    new_w, new_h = int(w * scale), int(h * scale)
+    img_resized = cv2.resize(img, (new_w, new_h), interpolation=cv2.INTER_AREA)
+    canvas = np.full((size, size), pad_color, dtype=np.uint8)
+    x_offset = (size - new_w) // 2
+    y_offset = (size - new_h) // 2
+    canvas[y_offset:y_offset+new_h, x_offset:x_offset+new_w] = img_resized
+    return Image.fromarray(canvas).convert("RGB")
 
 
 def segment_characters(image_path, min_width=10, min_height=10):
@@ -33,12 +59,9 @@ def segment_characters(image_path, min_width=10, min_height=10):
     for (x, y, w, h) in bounding_boxes:
         if w >= min_width and h >= min_height:
             char_crop = gray[y:y+h, x:x+w]
-            char_crop = cv2.resize(char_crop, (224, 224), interpolation=cv2.INTER_AREA)
-
-            # Convert to 3-channel PIL image
-            pil_img = Image.fromarray(char_crop).convert("RGB")
+            
+            # Use pad_and_resize instead of simple resize
+            pil_img = pad_and_resize(char_crop, size=224, pad_color=255)
             char_images.append(pil_img)
 
-    
     return char_images
-
