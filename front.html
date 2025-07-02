@@ -513,9 +513,8 @@
             // Clear previous results
             predictionGrid.innerHTML = '';
 
-            // Assuming 'predictions' is now an array of strings like ["ha", "na", "ca", "ra", "ka"]
-            // Join them into a single string
-            const fullTransliteration = predictions.join(''); // This will create "hanacaraka"
+            // Assuming 'predictions' is now a strings like "hanacaraka"
+            const fullTransliteration = predictions; 
 
             // Create a single item to display the combined word
             const item = document.createElement('div');

@@ -11,3 +11,7 @@ pasangan_augment/
 pasangan-gen.py
 pasangan_dataset/
 pasangan_splits/
+DATA/
+SAVED_MODELS/
+TESTS/
+USELESS.py

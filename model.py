@@ -73,9 +73,9 @@ train_transform = transforms.Compose([
 ])
 
 
-traindir = "D:/Python/Aksara/data_splits/train" 
-valdir = "D:/Python/Aksara/data_splits/val"     
-testdir = "D:/Python/Aksara/data_splits/test"  
+traindir = "D:/Python/Aksara/DATA/aksaraUpdate_splits/train" 
+valdir = "D:/Python/Aksara/DATA/aksaraUpdate_splits/val"     
+testdir = "D:/Python/Aksara/DATA/aksaraUpdate_splits/test"  
 train_dataset = datasets.ImageFolder(traindir, transform=train_transform)
 test_dataset = datasets.ImageFolder(testdir, transform=transform)
 val_dataset = datasets.ImageFolder(valdir, transform=transform)
@@ -90,7 +90,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 num_classes = len(train_dataset.classes)
 
 model = torchvision.models.resnet18(weights=ResNet18_Weights.DEFAULT)
-model.fc = nn.Linear(model.fc.in_features, 20)
+model.fc = nn.Linear(model.fc.in_features, num_classes)
 model.to(device)
 criterion = nn.CrossEntropyLoss(label_smoothing=0.1)
 optimizer = torch.optim.Adam(model.parameters(), lr=0.0001)
@@ -163,9 +163,9 @@ with torch.no_grad():
         correct += (predicted == labels).sum().item()
     
 accuracy = 100 * correct / total
-print(f"Test Accuracy: {accuracy:.2f}%") # 93% accuracy
+print(f"Test Accuracy: {accuracy:.2f}%") # 96.40% accuracy (updated)
 
 # Saving the model
-torch.save(model.state_dict(), "aksara_model.pth")
+torch.save(model.state_dict(), "aksaraUpdate_model.pth")
 print("Model saved")
 

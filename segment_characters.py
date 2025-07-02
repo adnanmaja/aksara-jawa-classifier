@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 from PIL import Image
+from scipy.signal import find_peaks
 
 
 def segment_characters(pil_image, min_width=10, min_height=10):
@@ -15,51 +16,61 @@ def segment_characters(pil_image, min_width=10, min_height=10):
         pil = Image.fromarray(new_img)
         return pil.resize((size, size), Image.Resampling.LANCZOS)
 
-    def vertical_split(gray_char_img, min_height_split=20):
-        """Split a vertically long image using horizontal projection profile."""
+    def split_vertically_or_horizontally_if_needed(gray_char_img, aspect_thresh=2.0):
         h, w = gray_char_img.shape
-        projection = np.sum(255 - gray_char_img, axis=1)
-        peaks = []
-        threshold = np.max(projection) * 0.1
 
-        # Find low valleys
-        for i in range(1, h - 1):
-            if projection[i-1] > threshold and projection[i] < threshold and projection[i+1] > threshold:
-                peaks.append(i)
+        if h / w > aspect_thresh:
+            # Try horizontal projection (for stacked glyphs)
+            projection = np.sum(255 - gray_char_img, axis=1)
+            min_val = np.min(projection)
+            is_blank = projection < (min_val + 10)
 
-        # Split based on valleys
-        slices = []
-        last = 0
-        for p in peaks:
-            if p - last >= min_height_split:
-                slices.append(gray_char_img[last:p, :])
-                last = p
-        if h - last >= min_height_split:
-            slices.append(gray_char_img[last:, :])
-        return slices if len(slices) > 0 else [gray_char_img]
+            from scipy.signal import find_peaks
+            peaks, _ = find_peaks(is_blank.astype(np.uint8), distance=10)
 
+            if len(peaks) > 0:
+                parts = []
+                last = 0
+                for y in peaks:
+                    if y - last > 10:
+                        part = gray_char_img[last:y, :]
+                        if part.shape[0] > 5:
+                            parts.append(part)
+                    last = y
+                part = gray_char_img[last:, :]
+                if part.shape[0] > 5:
+                    parts.append(part)
+                return parts
+
+        # Otherwise don't split
+        return [gray_char_img]
+
+    # Convert to grayscale
     if isinstance(pil_image, str):
-        from PIL import Image
         pil_image = Image.open(pil_image)
-
     if pil_image.mode != 'L':
         pil_image = pil_image.convert('L')
     gray = np.array(pil_image).astype(np.uint8)
 
+    # Threshold to binary image
     _, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+
+    # Find contours (external only)
     contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
+    # Sort contours left to right
     bounding_boxes = [cv2.boundingRect(c) for c in contours]
     bounding_boxes = sorted(bounding_boxes, key=lambda b: b[0])
 
     char_segments = []
+
     for (x, y, w, h) in bounding_boxes:
         if w >= min_width and h >= min_height:
             char_crop = gray[y:y+h, x:x+w]
-            splits = vertical_split(char_crop)
+            parts = split_vertically_or_horizontally_if_needed(char_crop)
 
-            for split_img in splits:
-                pil_img = pad_and_resize(split_img)
+            for part in parts:
+                pil_img = pad_and_resize(part, size=224, pad_color=255)
                 char_segments.append({
                     "image": pil_img,
                     "bbox": (x, y, w, h)
@@ -68,8 +79,8 @@ def segment_characters(pil_image, min_width=10, min_height=10):
     return char_segments
 
 import os
-segments = segment_characters("test_5.png") 
-output_dir = "segmented_chars"
+segments = segment_characters("./TESTS/test_5.png") 
+output_dir = "./DATA/segmented_chars"
 os.makedirs(output_dir, exist_ok=True)
 
 for i, seg in enumerate(segments):
