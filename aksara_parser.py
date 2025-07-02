@@ -193,6 +193,24 @@ def group_sandhangan(predictions):
     
     return grouped
 
+def join_base_and_sandhangan(base_preds, sandhangan_preds):
+    """
+    Joins base and sandhangan predictions into final grouped labels.
+
+    Args:
+        base_preds (list): ['ra', 'ka', 'ba']
+        sandhangan_preds (list): ['suku', '_', '_']
+    
+    Returns:
+        list of str: ['ra_suku', 'ka', 'ba']
+    """
+    joined = []
+    for base, sandh in zip(base_preds, sandhangan_preds):
+        if sandh != '_' and sandh is not None:
+            joined.append(f"{base}_{sandh}")
+        else:
+            joined.append(base)
+    return joined
 
 # openIMG = Image.open("TESTS/test_4.png")
 # result = parse_aksara_sentence(openIMG)

@@ -78,12 +78,13 @@ def segment_characters(pil_image, min_width=10, min_height=10):
 
     return char_segments
 
-import os
-segments = segment_characters("./TESTS/test_5.png") 
-output_dir = "./DATA/segmented_chars"
-os.makedirs(output_dir, exist_ok=True)
 
-for i, seg in enumerate(segments):
-    img = seg["image"]
-    x, y, w, h = seg["bbox"]
-    img.save(os.path.join(output_dir, f"char_{i}_x{x}_y{y}.png"))
+# import os
+# segments = segment_characters("./TESTS/test_5.png") 
+# output_dir = "./DATA/segmented_chars"
+# os.makedirs(output_dir, exist_ok=True)
+
+# for i, seg in enumerate(segments):
+#     img = seg["image"]
+#     x, y, w, h = seg["bbox"]
+#     img.save(os.path.join(output_dir, f"char_{i}_x{x}_y{y}.png"))
