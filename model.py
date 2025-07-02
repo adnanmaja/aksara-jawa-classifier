@@ -163,7 +163,7 @@ with torch.no_grad():
         correct += (predicted == labels).sum().item()
     
 accuracy = 100 * correct / total
-print(f"Test Accuracy: {accuracy:.2f}%")
+print(f"Test Accuracy: {accuracy:.2f}%") # 93% accuracy
 
 # Saving the model
 torch.save(model.state_dict(), "aksara_model.pth")

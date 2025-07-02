@@ -56,11 +56,13 @@ dependencies:
   - icc_rt=2022.1.0=h6049295_2
   - icu=73.1=h6c2663c_0
   - idna=3.7=py312haa95532_0
+  - imageio=2.37.0=py312haa95532_0
   - intel-openmp=2023.1.0=h59b6b97_46320
   - jinja2=3.1.6=py312haa95532_0
   - jpeg=9e=h827c3e9_3
   - kiwisolver=1.4.8=py312h5da7b33_0
   - krb5=1.20.1=h5b6d351_0
+  - lazy_loader=0.4=py312haa95532_0
   - lcms2=2.16=h62be587_1
   - lerc=4.0.0=h5da7b33_0
   - libabseil=20250127.0=cxx17_h52369b4_0
@@ -134,6 +136,8 @@ dependencies:
   - qtwebchannel=6.7.3=h5da7b33_0
   - qtwebsockets=6.7.3=h5da7b33_0
   - requests=2.32.4=py312haa95532_0
+  - scikit-image=0.25.2=py312h094160a_0
+  - scipy=1.15.3=py312h180bac5_0
   - setuptools=72.1.0=py312haa95532_0
   - sip=6.10.0=py312h5da7b33_0
   - six=1.17.0=py312haa95532_0
@@ -142,6 +146,7 @@ dependencies:
   - starlette=0.38.2=py312haa95532_0
   - sympy=1.13.3=py312haa95532_1
   - tbb=2021.8.0=h59b6b97_0
+  - tifffile=2025.2.18=py312haa95532_0
   - tk=8.6.14=h5e9d12e_1
   - tornado=6.5.1=py312h827c3e9_0
   - typing-extensions=4.12.2=py312haa95532_0

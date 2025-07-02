@@ -14,7 +14,6 @@ class JavaneseCharacterGenerator:
         self.output_dir.mkdir(parents=True, exist_ok=True)
         
     def generate_base_image(self, character, font_path, font_size):
-        """Generate a base character image without augmentations"""
         try:
             font = ImageFont.truetype(font_path, font_size)
         except:
@@ -40,12 +39,10 @@ class JavaneseCharacterGenerator:
         return img
     
     def apply_rotation(self, img, max_angle=5):
-        """Apply slight rotation (-max_angle to +max_angle degrees)"""
         angle = random.uniform(-max_angle, max_angle)
         return img.rotate(angle, fillcolor='white', expand=False)
     
     def apply_position_jitter(self, img, max_shift=3):
-        """Apply small position shifts"""
         shift_x = random.randint(-max_shift, max_shift)
         shift_y = random.randint(-max_shift, max_shift)
         
@@ -55,14 +52,12 @@ class JavaneseCharacterGenerator:
         return new_img
     
     def apply_blur(self, img, blur_probability=0.3):
-        """Apply slight gaussian blur randomly"""
         if random.random() < blur_probability:
             blur_radius = random.uniform(0.2, 0.8)
             return img.filter(ImageFilter.GaussianBlur(radius=blur_radius))
         return img
     
     def apply_noise(self, img, noise_probability=0.3, noise_intensity=10):
-        """Add slight gaussian noise"""
         if random.random() < noise_probability:
             # Convert to numpy array
             img_array = np.array(img)
@@ -78,7 +73,6 @@ class JavaneseCharacterGenerator:
         return img
     
     def apply_brightness_contrast(self, img, brightness_range=(0.8, 1.2), contrast_range=(0.8, 1.2)):
-        """Adjust brightness and contrast"""
         # Brightness adjustment
         brightness_factor = random.uniform(*brightness_range)
         enhancer = ImageEnhance.Brightness(img)
@@ -92,7 +86,6 @@ class JavaneseCharacterGenerator:
         return img
     
     def apply_background_variations(self, img, bg_variation_prob=0.2):
-        """Apply different background colors/textures"""
         if random.random() < bg_variation_prob:
             # Convert to RGBA to work with transparency
             img_rgba = img.convert('RGBA')
@@ -107,7 +100,6 @@ class JavaneseCharacterGenerator:
         return img
     
     def apply_morphological_operations(self, img, morph_prob=0.2):
-        """Apply slight erosion or dilation to vary stroke width"""
         if random.random() < morph_prob:
             # Convert to opencv format
             img_cv = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
@@ -194,9 +186,24 @@ if __name__ == "__main__":
         'ꦥ', 'ꦣ', 'ꦗ', 'ꦪ', 'ꦚ',
         'ꦩ', 'ꦒ', 'ꦧ', 'ꦛ', 'ꦔ',
     ]
+
+    sandhangan_characters = [
+        'ꦶ', 'ꦸ', 'ꦺ', 'ꦺꦴ', 'ꦼ',
+        'ꦂ', 'ꦁ', 'ꦃ',
+        'ꦿ', 'ꦽ', 'ꦾ', 
+        'ꦷ', 'ꦹ', '', 'ꦻ', 'ꦾ꦳'
+    ]
     
-    print(f"Number of characters: {len(javanese_characters)}")
-    print("Characters:", javanese_characters)
+    pasangan_characters = [
+        '', '', '꧀ꦕ', '꧀ꦫ', '꧀ꦏ',
+        '꧀ꦢ', '꧀ꦠ', '꧀ꦱ', '꧀ꦮ','꧀ꦭ', 
+        '꧀ꦥ', '꧀ꦝ', '꧀ꦗ', '꧀ꦪ', '꧀ꦚ',
+        '꧀ꦩ', '꧀ꦒ', '꧀ꦧ', '꧀ꦛ', '꧀ꦔ'
+    ]
+
+
+    print(f"Number of characters: {len(pasangan_characters)}")
+    print("Characters:", pasangan_characters)
     
     # Define font paths (update these paths to your actual font locations)
     font_paths = {
@@ -211,16 +218,15 @@ if __name__ == "__main__":
     # Create generator
     generator = JavaneseCharacterGenerator(
         font_paths=font_paths,
-        output_dir='./javanese_dataset',
+        output_dir='./pasangan_dataset',
         image_size=(224, 224)
     )
     
     # Generate dataset
     generator.generate_dataset(
-        characters=javanese_characters,
-        variations_per_font=50  # 50 variations per character per font
+        characters=pasangan_characters,
+        variations_per_font=50 
     )
 
 
 
-    
