@@ -194,22 +194,36 @@ def group_sandhangan(predictions):
     return grouped
 
 def join_base_and_sandhangan(base_preds, sandhangan_preds):
-    """
-    Joins base and sandhangan predictions into final grouped labels.
-
-    Args:
-        base_preds (list): ['ra', 'ka', 'ba']
-        sandhangan_preds (list): ['suku', '_', '_']
-    
-    Returns:
-        list of str: ['ra_suku', 'ka', 'ba']
-    """
+   
     joined = []
-    for base, sandh in zip(base_preds, sandhangan_preds):
-        if sandh != '_' and sandh is not None:
-            joined.append(f"{base}_{sandh}")
-        else:
+    last_base_idx = -1
+
+    for i in range(len(base_preds)):
+        base = base_preds[i]
+        sandh = sandhangan_preds[i]
+
+        if base != '_' and sandh == '_':
             joined.append(base)
+            last_base_idx = len(joined) - 1
+
+        elif base != '_' and sandh != '_':
+            joined.append(f"{base}_{sandh}")
+            last_base_idx = len(joined) - 1
+
+        elif base == '_' and sandh != '_':
+            if last_base_idx >= 0:
+                # Append sandhangan to previous base
+                if '_' in joined[last_base_idx]:
+                    base_part, prev_sandh = joined[last_base_idx].split('_', 1)
+                    joined[last_base_idx] = f"{base_part}_{sandh}"  # overwrite previous sandhangan
+                else:
+                    joined[last_base_idx] = f"{joined[last_base_idx]}_{sandh}"
+            else:
+                # no base to attach to
+                joined.append(f"_{sandh}")
+        else:
+            joined.append('_')  # blank segment
+    
     return joined
 
 # openIMG = Image.open("TESTS/test_4.png")
