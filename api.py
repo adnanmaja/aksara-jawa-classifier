@@ -6,7 +6,9 @@ import io
 import torch.nn as nn
 from torchvision.models import resnet18
 from segment_characters import segment_characters, segment_by_projection
-from aksara_parser import group_sandhangan, join_base_and_sandhangan
+from aksara_parser import basePredict, sandhanganPredict, pasanganPredict
+from aksara_parser import classify_region, group_sandhangan, join_base_and_sandhangan, transliterate_grouped, integrate_pasangan
+from aksara_parser import baseDebug, sandhanganDebug, pasanganDebug
 from torchvision import transforms
 import numpy as np
 from fastapi.middleware.cors import CORSMiddleware
@@ -21,179 +23,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-base_model = resnet18(weights=False)
-base_model.fc = nn.Linear(base_model.fc.in_features, 40)
-base_model.load_state_dict(torch.load("SAVED_MODELS/aksaraUpdate_model.pth", map_location="cpu"))
-base_model.to(device)
-base_model.eval()
-
-sandhangan_model = resnet18(weights=False)
-sandhangan_model.fc = nn.Linear(sandhangan_model.fc.in_features, 20)
-sandhangan_model.load_state_dict(torch.load("SAVED_MODELS/sandhangan_model.pth", map_location="cpu"))
-sandhangan_model.to(device)
-sandhangan_model.eval()
-
-pasangan_model = resnet18(weights=False)
-pasangan_model.fc = nn.Linear(pasangan_model.fc.in_features, 20)
-pasangan_model.load_state_dict(torch.load("SAVED_MODELS/pasangan_model.pth", map_location="cpu"))
-pasangan_model.to(device)
-pasangan_model.eval()
-
-label_map = [
-    "ba", "ba_suku", "ca", "ca_suku", "da", "da_suku", "dha", "dha_suku", "ga", "ga_suku",
-    "ha", "ha_suku", "ja", "ja_suku", "ka", "ka_suku", "la", "la_suku", "ma", "ma_suku",
-    "na", "na_suku", "nga", "nga_suku", "nya", "nya_suku", "pa", "pa_suku", "ra", "ra_suku",
-    "sa", "sa_suku", "ta", "ta_suku", "tha", "tha_suku", "wa", "wa_suku", "ya", "ya_suku"
-]
-
-sandhangan_map = ['cakra', 'cakra2', 'keret',
-'mbuhai', 'mbuhau', 'mbuhii', 'mbuhuu', 'pangkal',
-'pepet', 'rongga', 'suku', 'taling', 'talingtarung',
-'wignyan', 'wulu'
-]
-
-sandhanganSound_map = {
-    # Vowels
-    'suku': 'u',
-    'wulu': 'i',
-    'taling': 'e',
-    'taling_tarung': 'o',
-    'pepet': 'ê',
-
-    # Consonants
-    'cakra': 'r',
-    'wignyan': 'h',
-    'keret': 'ng',  
-    'cecak': 'ng',  
-}
-
-pasangan_map = [
-'b', 'c', 'd', 'dh', 'g',
-'m', 'j', 'k', 'l', 'h',
-'n', 'ng', 'ny', 'p', 'r',
-'s', 't', 'th', 'w', 'y'
-]
-
-transform = transforms.Compose([
-    transforms.Resize((224, 224)),
-    transforms.ToTensor(),
-    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-])
-
-def basePredict(images):
-    base_results = []
-    if images.mode != 'RGB':
-        images = images.convert('RGB')
-    tensor = transform(images).unsqueeze(0).to(device)
-    with torch.no_grad():
-        outputs = base_model(tensor)
-        probs = torch.nn.functional.softmax(outputs, dim=1)
-        conf, pred_idx = torch.max(probs, dim=1)
-        print(f"[DEBUG] Predicted {label_map[pred_idx.item()]} with confidence {conf.item():.2f}")
-        pred_idx = torch.argmax(outputs, dim=1).item()
-        base_results.append(label_map[pred_idx])
-    return label_map[pred_idx]
-
-def sandhanganPredict(images):
-    sandhangan_results = []
-    if images.mode != 'RGB':
-        images = images.convert('RGB')
-    tensor = transform(images).unsqueeze(0).to(device)
-    with torch.no_grad():
-        outputs = sandhangan_model(tensor)
-        probs = torch.nn.functional.softmax(outputs, dim=1)
-        conf, pred_idx = torch.max(probs, dim=1)
-        print(f"[DEBUG] Predicted {sandhangan_map[pred_idx.item()]} with confidence {conf.item():.2f}")
-    return sandhangan_map[pred_idx]
-
-def pasanganPredict(images):
-    pasangan_results = []
-    if images.mode != 'RGB':
-        images = images.convert('RGB')
-    tensor = transform(images).unsqueeze(0).to(device)
-    with torch.no_grad():
-        outputs = pasangan_model(tensor)
-        pred_idx = torch.argmax(outputs, dim=1).item()
-        pasangan_results.append(pasangan_map[pred_idx])
-    return pasangan_map[pred_idx]
-
-def classify_region(bbox, avg_height, avg_y, top_thresh=0.65, bottom_thresh=1.4):
-    x, y, w, h = bbox
-    cy = y + h / 2
-
-    # Very short
-    if h < 0.5 * avg_height or w < 0.3 * avg_height :
-        return 'sandhangan' # Originally sandhangan
-    # Base in the center, large enough
-    elif h >= 0.7 * avg_height and (avg_y - 0.3 * avg_height) < cy < (avg_y + 0.3 * avg_height):
-        return 'pasangan' # Originially base
-    # Significantly below baseline
-    elif cy > avg_y + 0.35 * avg_height:
-        return 'base' # Originally pasangan
-    else:
-        return 'sandhangan' # Originally sandhangan
-        
-
-def transliterate_grouped(joined_labels):
-    result = []
-
-    for label in joined_labels:
-        if '_' in label:
-            parts = label.split('_')
-            base = parts[0]
-            modifiers = parts[1:]
-
-            base_char = base
-            vowel = ''
-            final_consonants = ''
-
-            for mod in modifiers:
-                if mod in sandhanganSound_map:
-                    sound = sandhanganSound_map[mod]
-                    if sound in ['u', 'e', 'o', 'ê']:  # vowels
-                        vowel = sound
-                        base_char = base[0]
-                        print(f"IM A VOWEL → {mod} → {sound}")
-                    else:
-                        final_consonants += sound  # e.g. 'h', 'ng'
-                        print(f"NOT a vowel → {mod} → {sound}")
-                else:
-                    base += mod  # pasangan
-
-            result.append(base_char + vowel + final_consonants)
-        else:
-            result.append(label)
-
-    return ''.join(result)
-
-
-def integrate_pasangan(base_stream, pasangan_stream):
-    result = []
-
-    result = []
-    for i, base in enumerate(base_stream):
-        if base != '_':
-            result.append(base)
-
-            # pasangan is stored at the NEXT index
-            if i + 1 < len(pasangan_stream) and pasangan_stream[i + 1] != '_':
-                pasangan = pasangan_stream[i + 1]
-                result[-1] += f"_{pasangan}"
-        else:
-            continue  
-
-        if pasangan_stream[i] != '_':
-            if result:
-                result[-1] += f"_{pasangan_stream[i]}"
-    return result
-
-
 @app.post("/predict")
 async def predict(file : UploadFile = File(...)):
     img_bytes = await file.read()
     pil_image = Image.open(io.BytesIO(img_bytes)).convert("RGB")
-    char_segments = segment_by_projection(pil_image)  # Now works with updated function
+    char_segments = segment_by_projection(pil_image)  
 
     bboxes = [seg['bbox'] for seg in char_segments]
     avg_h = np.mean([h for _, _, _, h in bboxes])
@@ -216,7 +50,7 @@ async def predict(file : UploadFile = File(...)):
 
         elif role == 'sandhangan':
             pred = sandhanganPredict(seg['image'])
-            print("🟢 Sandhangan detected:", pred)  # ← debug line
+            print("🟢 Sandhangan detected:", pred)  # debug line
             sandhangan_preds.append(pred)
             base_preds.append('_')
             pasangan_preds.append('_')
@@ -235,14 +69,18 @@ async def predict(file : UploadFile = File(...)):
     print(f"[GROUPED] Type: {type(grouped)}, {grouped}")
     final_text = transliterate_grouped(grouped_result)
 
+    base_debug = baseDebug(seg['image'])
+    sandhangan_debug = sandhanganDebug(seg['image'])
+    pasangan_debug = pasanganDebug(seg['image'])
+
     return {
-    "base": base_preds,
-    "sandhangan": sandhangan_preds,
-    "pasangan": pasangan_preds,
-    "integrate_pasangan()": integrated_result, 
-    "joined_base_and_sandhangan()": grouped_result,
-    "group_sandhangan()": grouped,
-    "transliterate_grouped()": final_text}
+    "debug": {
+        "base": base_debug,
+        "sandhangan": sandhangan_debug,
+        "pasangan": pasangan_debug, 
+        "joined_base_and_sandhangan()": grouped_result,
+        "group_sandhangan()": grouped,}, 
+    "prediction": final_text}
 
 if __name__ == "__main__":
     testimg = Image.open("TESTS/test_4.png")

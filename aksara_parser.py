@@ -1,198 +1,175 @@
 import torch
 import numpy as np
 from torchvision import transforms
-from segment_characters import segment_characters  # your segmenter
+from segment_characters import segment_characters
 from PIL import Image
 import cv2
 from torchvision.models import resnet18
 import torchvision.models as models
+import torch.nn as nn
 
 # === LOAD MODELS ===
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
-
-
-base_model = models.resnet18(num_classes=40)
-base_model.load_state_dict(torch.load("SAVED_MODELS/aksaraUpdate_model.pth", map_location=device))
-base_model = base_model.to(device)
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+base_model = resnet18(weights=False)
+base_model.fc = nn.Linear(base_model.fc.in_features, 40)
+base_model.load_state_dict(torch.load("SAVED_MODELS/aksaraUpdate_model.pth", map_location="cpu"))
+base_model.to(device)
 base_model.eval()
 
-sandhangan_model = models.resnet18(num_classes=20)
-sandhangan_model.load_state_dict(torch.load("SAVED_MODELS/sandhangan_model.pth", map_location=device))
-sandhangan_model = base_model.to(device)
+sandhangan_model = resnet18(weights=False)
+sandhangan_model.fc = nn.Linear(sandhangan_model.fc.in_features, 20)
+sandhangan_model.load_state_dict(torch.load("SAVED_MODELS/sandhangan_model.pth", map_location="cpu"))
+sandhangan_model.to(device)
 sandhangan_model.eval()
 
-pasangan_model = models.resnet18(num_classes=20)
-pasangan_model.load_state_dict(torch.load("SAVED_MODELS/pasangan_model.pth", map_location=device))
-pasangan_model = base_model.to(device)
+pasangan_model = resnet18(weights=False)
+pasangan_model.fc = nn.Linear(pasangan_model.fc.in_features, 20)
+pasangan_model.load_state_dict(torch.load("SAVED_MODELS/pasangan_model.pth", map_location="cpu"))
+pasangan_model.to(device)
 pasangan_model.eval()
 
-# === TRANSFORM (same as training) ===
+
 transform = transforms.Compose([
     transforms.ToTensor(),
     transforms.Normalize(mean=[0.485, 0.456, 0.406],
                          std=[0.229, 0.224, 0.225])
 ])
 
-base_classes = [
+# === LABELS MAPPING ===
+label_map = [
     "ba", "ba_suku", "ca", "ca_suku", "da", "da_suku", "dha", "dha_suku", "ga", "ga_suku",
     "ha", "ha_suku", "ja", "ja_suku", "ka", "ka_suku", "la", "la_suku", "ma", "ma_suku",
     "na", "na_suku", "nga", "nga_suku", "nya", "nya_suku", "pa", "pa_suku", "ra", "ra_suku",
     "sa", "sa_suku", "ta", "ta_suku", "tha", "tha_suku", "wa", "wa_suku", "ya", "ya_suku"
 ]
 
-sandhangan_classes = ['cakra', 'cakra2', 'keret',
+sandhangan_map = ['cakra', 'cakra2', 'keret',
 'mbuhai', 'mbuhau', 'mbuhii', 'mbuhuu', 'pangkal',
 'pepet', 'rongga', 'suku', 'taling', 'talingtarung',
-'wigyan', 'wulu'
+'wignyan', 'wulu'
 ]
 
-pasangan_classes = [
+sandhanganSound_map = {
+    # Vowels
+    'suku': 'u',
+    'wulu': 'i',
+    'taling': 'e',
+    'taling_tarung': 'o',
+    'pepet': 'ê',
+
+    # Consonants
+    'cakra': 'r',
+    'wignyan': 'h',
+    'keret': 'ng',  
+    'cecak': 'ng',  
+}
+
+pasangan_map = [
 'b', 'c', 'd', 'dh', 'g',
-'h', 'j', 'k', 'l', 'm',
+'m', 'j', 'k', 'l', 'h',
 'n', 'ng', 'ny', 'p', 'r',
 's', 't', 'th', 'w', 'y'
 ]
 
-# === PAD AND RESIZE ===
-def pad_and_resize(img, size=224, pad_color=255):
-    img = np.array(img.convert("L"))
-    h, w = img.shape
-    scale = min((size - 20) / h, (size - 20) / w)
-    new_w, new_h = int(w * scale), int(h * scale)
-    resized = cv2.resize(img, (new_w, new_h), interpolation=cv2.INTER_AREA)
-    canvas = np.full((size, size), pad_color, dtype=np.uint8)
-    x_off, y_off = (size - new_w)//2, (size - new_h)//2
-    canvas[y_off:y_off+new_h, x_off:x_off+new_w] = resized
-    return Image.fromarray(canvas).convert("RGB")
 
-# === CLASSIFY SEGMENT ===
-def classify(image_tensor, model, class_names, label_type="base"):
+# === PREDICTION LOGICS ===
+def basePredict(images):
+    base_results = []
+    if images.mode != 'RGB':
+        images = images.convert('RGB')
+    tensor = transform(images).unsqueeze(0).to(device)
     with torch.no_grad():
-        output = model(image_tensor.to(device))
-        pred_idx = output.argmax(dim=1).item()
+        outputs = base_model(tensor)
+        probs = torch.nn.functional.softmax(outputs, dim=1)
+        conf, pred_idx = torch.max(probs, dim=1)
+        print(f"[DEBUG] Predicted {label_map[pred_idx.item()]} with confidence {conf.item():.2f}")
+        base_debug = f"[DEBUG] Predicted {label_map[pred_idx.item()]} with confidence {conf.item():.2f}"
+        pred_idx = torch.argmax(outputs, dim=1).item()
+        base_results.append(label_map[pred_idx])
+    return label_map[pred_idx]
 
-        if pred_idx >= len(class_names):
-            print(f"[⚠️] Invalid prediction index {pred_idx} for {label_type} (len={len(class_names)})")
-            return "UNKNOWN"
+def sandhanganPredict(images):
+    sandhangan_results = []
+    if images.mode != 'RGB':
+        images = images.convert('RGB')
+    tensor = transform(images).unsqueeze(0).to(device)
+    with torch.no_grad():
+        outputs = sandhangan_model(tensor)
+        probs = torch.nn.functional.softmax(outputs, dim=1)
+        conf, pred_idx = torch.max(probs, dim=1)
+        print(f"[DEBUG] Predicted {sandhangan_map[pred_idx.item()]} with confidence {conf.item():.2f}")
+        sandhangan_debug = f"[DEBUG] Predicted {sandhangan_map[pred_idx.item()]} with confidence {conf.item():.2f}"
+    return sandhangan_map[pred_idx]
 
-        return class_names[pred_idx]
-
-# === GROUP BY POSITION ===
-def assign_roles(segments):
-    grouped = []
-    base_boxes = []
-
-    # Identify base characters
-    avg_h = np.mean([s['bbox'][3] for s in segments])
-    for i, s in enumerate(segments):
-        if s['bbox'][3] >= 0.7 * avg_h:
-            s['role'] = 'base'
-            base_boxes.append((i, s))
-    
-    # Assign sandhangan/pasangan to base characters
-    for i, seg in enumerate(segments):
-        if 'role' in seg: continue  # already assigned as base
-
-        x, y, w, h = seg['bbox']
-        cx, cy = x + w//2, y + h//2
-        assigned = False
-
-        for base_i, base in base_boxes:
-            bx, by, bw, bh = base['bbox']
-            bcx, bcy = bx + bw//2, by + bh//2
-
-            if abs(cx - bcx) < bw * 0.6:
-                if cy < by:
-                    seg['role'] = 'sandhangan_atas'
-                    seg['base_idx'] = base_i
-                    assigned = True
-                    break
-                elif cy > by + bh:
-                    seg['role'] = 'pasangan'
-                    seg['base_idx'] = base_i
-                    assigned = True
-                    break
-                elif abs(cy - bcy) < bh * 0.3:
-                    seg['role'] = 'sandhangan_samping'
-                    seg['base_idx'] = base_i
-                    assigned = True
-                    break
-
-        if not assigned:
-            seg['role'] = 'unknown'
-
-    # Group by base char
-    output = []
-    for base_i, base in base_boxes:
-        entry = {'base': base['pred'], 'sandhangan': [], 'pasangan': []}
-        for s in segments:
-            if s.get('base_idx') == base_i:
-                if 'sandhangan' in s['role']:
-                    entry['sandhangan'].append(s['pred'])
-                elif s['role'] == 'pasangan':
-                    entry['pasangan'].append(s['pred'])
-        output.append(entry)
-
-    return output
-
-# === MAIN PARSER ===
-def parse_aksara_sentence(image_path):
-    segments = segment_characters(image_path)
-    parsed = []
-
-    for i, img in enumerate(segments):
-        for seg in segments:
-            padded = pad_and_resize(seg["image"])
-        tensor = transform(padded).unsqueeze(0)
-
-        # Predict all 3, pick best
-        base_pred = classify(tensor, base_model, base_classes)
-        sandhangan_pred = classify(tensor, sandhangan_model, sandhangan_classes)
-        pasangan_pred = classify(tensor, pasangan_model, pasangan_classes)
-
-        # Store with bbox (assumes segment_characters returns that too!)
-        parsed.append({
-            'img': padded,
-            'tensor': tensor,
-            'pred_base': base_pred,
-            'pred_sandhangan': sandhangan_pred,
-            'pred_pasangan': pasangan_pred,
-            'bbox': segments[i]["bbox"]  # you'll need to return this from segment_characters!
-        })
-
-    # Assign main prediction & role
-    avg_h = np.mean([seg['bbox'][3] for seg in parsed])
-    avg_y = np.mean([seg['bbox'][1] for seg in parsed])
-
-    for p in parsed:
-        x, y, w, h = p['bbox']
-        cx = x + w // 2
-        cy = y + h // 2
-
-        if h >= 0.7 * avg_h and abs(cy - avg_y) < 0.3 * avg_h:
-            p['pred'] = p['pred_base']
-        elif cy < avg_y:
-            p['pred'] = p['pred_sandhangan']
-        elif cy > avg_y + 0.5 * avg_h:
-            p['pred'] = p['pred_pasangan']
-        else:
-            p['pred'] = p['pred_sandhangan']
+def pasanganPredict(images):
+    pasangan_results = []
+    if images.mode != 'RGB':
+        images = images.convert('RGB')
+    tensor = transform(images).unsqueeze(0).to(device)
+    with torch.no_grad():
+        outputs = pasangan_model(tensor)
+        probs = torch.nn.functional.softmax(outputs, dim=1)
+        conf, pred_idx = torch.max(probs, dim=1)
+        print(f"[DEBUG] Predicted {pasangan_map[pred_idx.item()]} with confidence {conf.item():.2f}")
+        pasangan_debug = f"[DEBUG] Predicted {pasangan_map[pred_idx.item()]} with confidence {conf.item():.2f}"
+        pred_idx = torch.argmax(outputs, dim=1).item()
+    return pasangan_map[pred_idx]
 
 
-    return assign_roles(parsed)
+# === DEBUG MESSAGES (looks cool) ===
+def baseDebug(images):
+    if images.mode != 'RGB':
+        images = images.convert('RGB')
+    tensor = transform(images).unsqueeze(0).to(device)
+    with torch.no_grad():
+        outputs = base_model(tensor)
+        probs = torch.nn.functional.softmax(outputs, dim=1)
+        conf, pred_idx = torch.max(probs, dim=1)
+        base_debug = f"[DEBUG] Predicted {label_map[pred_idx.item()]} with confidence {conf.item():.2f}"
+    return base_debug
 
-def group_sandhangan(predictions):
-    grouped = []
+def sandhanganDebug(images):
+    if images.mode != 'RGB':
+        images = images.convert('RGB')
+    tensor = transform(images).unsqueeze(0).to(device)
+    with torch.no_grad():
+        outputs = sandhangan_model(tensor)
+        probs = torch.nn.functional.softmax(outputs, dim=1)
+        conf, pred_idx = torch.max(probs, dim=1)
+        sandhangan_debug = f"[DEBUG] Predicted {sandhangan_map[pred_idx.item()]} with confidence {conf.item():.2f}"
+    return sandhangan_debug
 
-    for label in predictions:
-        if '_' in label:
-            base, mark = label.split('_', 1)
-            grouped.append((base, mark))
-        else:
-            grouped.append((label, None))
-    
-    return grouped
+def pasanganDebug(images):
+    if images.mode != 'RGB':
+        images = images.convert('RGB')
+    tensor = transform(images).unsqueeze(0).to(device)
+    with torch.no_grad():
+        outputs = pasangan_model(tensor)
+        probs = torch.nn.functional.softmax(outputs, dim=1)
+        conf, pred_idx = torch.max(probs, dim=1)
+        pasangan_debug = f"[DEBUG] Predicted {pasangan_map[pred_idx.item()]} with confidence {conf.item():.2f}"
+    return pasangan_debug
 
+# === DEFINING BASE, SANDHANGAN, AND PASANGAN ===
+# Theres role mismatch here i have no idea why but it works
+def classify_region(bbox, avg_height, avg_y, top_thresh=0.65, bottom_thresh=1.4):
+    x, y, w, h = bbox
+    cy = y + h / 2
+
+    # Very short
+    if h < 0.5 * avg_height or w < 0.3 * avg_height :
+        return 'sandhangan' # Originally sandhangan
+    # Base in the center, large enough
+    elif h >= 0.7 * avg_height and (avg_y - 0.3 * avg_height) < cy < (avg_y + 0.3 * avg_height):
+        return 'pasangan' # Originially base
+    # Significantly below baseline
+    elif cy > avg_y + 0.35 * avg_height:
+        return 'base' # Originally pasangan
+    else:
+        return 'sandhangan' # Originally sandhangan
+        
+
+# === COMBINING BASE AND SANDHANGAN ===
 def join_base_and_sandhangan(base_preds, sandhangan_preds):
     joined = []
     last_base_idx = -1
@@ -227,8 +204,75 @@ def join_base_and_sandhangan(base_preds, sandhangan_preds):
 
     return joined
 
+def transliterate_grouped(joined_labels):
+    result = []
+
+    for label in joined_labels:
+        if '_' in label:
+            parts = label.split('_')
+            base = parts[0]
+            modifiers = parts[1:]
+
+            base_char = base
+            vowel = ''
+            final_consonants = ''
+
+            for mod in modifiers:
+                if mod in sandhanganSound_map:
+                    sound = sandhanganSound_map[mod]
+                    if sound in ['u', 'e', 'o', 'ê']:  # For vowels
+                        vowel = sound
+                        base_char = base[0]
+                        print(f"IM A VOWEL → {mod} → {sound}")
+                    else:
+                        final_consonants += sound  # For consonants
+                        print(f"NOT a vowel → {mod} → {sound}")
+                else:
+                    base += mod  # pasangan
+
+            result.append(base_char + vowel + final_consonants)
+        else:
+            result.append(label)
+
+    return ''.join(result)
+
+def group_sandhangan(predictions):
+    grouped = []
+
+    for label in predictions:
+        if '_' in label:
+            base, mark = label.split('_', 1)
+            grouped.append((base, mark))
+        else:
+            grouped.append((label, None))
+    
+    return grouped
+
+
+# === COMBINING PASANGAN ===
+def integrate_pasangan(base_stream, pasangan_stream):
+    result = []
+
+    result = []
+    for i, base in enumerate(base_stream):
+        if base != '_':
+            result.append(base)
+            
+            if i + 1 < len(pasangan_stream) and pasangan_stream[i + 1] != '_':
+                pasangan = pasangan_stream[i + 1]
+                result[-1] += f"_{pasangan}"
+        else:
+            continue  
+
+        if pasangan_stream[i] != '_':
+            if result:
+                result[-1] += f"_{pasangan_stream[i]}"
+    return result
+
+
+# == TEST AND DEBUG PURPOSES==
 if __name__ == "__main__":
     openIMG = Image.open("TESTS/test_4.png")
-    result = parse_aksara_sentence(openIMG)
+    result = group_sandhangan(openIMG)
     for r in result:
         print(r)

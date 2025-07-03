@@ -25,7 +25,6 @@ def split_vertically_or_horizontally_if_needed(gray_char_img, aspect_thresh=2.0)
         h, w = gray_char_img.shape
 
         if h / w > aspect_thresh:
-            # Try horizontal projection (for stacked glyphs)
             projection = np.sum(255 - gray_char_img, axis=1)
             min_val = np.min(projection)
             is_blank = projection < (min_val + 10)
@@ -47,7 +46,6 @@ def split_vertically_or_horizontally_if_needed(gray_char_img, aspect_thresh=2.0)
                     parts.append(part)
                 return parts
 
-        # Otherwise don't split
         return [gray_char_img]
 
 def segment_characters(pil_image, min_width=10, min_height=10):
@@ -99,7 +97,7 @@ def segment_by_projection(pil_image, min_char_width=5, min_char_height=5):
     gray = np.array(img)
     _, binary = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
 
-    # --- STEP 1: Line segmentation ---
+    # Line segmentation
     horizontal_sum = np.sum(binary, axis=1)
     line_boundaries = []
     in_line = False
@@ -115,7 +113,7 @@ def segment_by_projection(pil_image, min_char_width=5, min_char_height=5):
 
     segments = []
 
-    # --- STEP 2: Character segmentation within each line ---
+    # Character segmentation within each line 
     for (y1, y2) in line_boundaries:
         line_img = binary[y1:y2, :]
         vertical_sum = np.sum(line_img, axis=0)
