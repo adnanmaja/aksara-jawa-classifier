@@ -5,7 +5,7 @@ import torch
 import io
 import torch.nn as nn
 from torchvision.models import resnet18
-from segment_characters import segment_characters
+from segment_characters import segment_characters, segment_by_projection
 from aksara_parser import group_sandhangan, join_base_and_sandhangan
 from torchvision import transforms
 import numpy as np
@@ -86,7 +86,8 @@ def basePredict(images):
     with torch.no_grad():
         outputs = base_model(tensor)
         pred_idx = torch.argmax(outputs, dim=1).item()
-        return label_map[pred_idx]
+        base_results.append(label_map[pred_idx])
+    return base_results
 
 def sandhanganPredict(images):
     sandhangan_results = []
@@ -96,7 +97,7 @@ def sandhanganPredict(images):
     with torch.no_grad():
         outputs = sandhangan_model(tensor)
         pred_idx = torch.argmax(outputs, dim=1).item()
-        return sandhangan_map[pred_idx]
+    return sandhangan_map[pred_idx]
 
 def pasanganPredict(images):
     pasangan_results = []
@@ -106,7 +107,7 @@ def pasanganPredict(images):
     with torch.no_grad():
         outputs = pasangan_model(tensor)
         pred_idx = torch.argmax(outputs, dim=1).item()
-        return pasangan_map[pred_idx]
+    return pasangan_map[pred_idx]
 
 def classify_region(bbox, avg_height, avg_y, top_thresh=0.65, bottom_thresh=1.4):
     x, y, w, h = bbox
@@ -114,10 +115,10 @@ def classify_region(bbox, avg_height, avg_y, top_thresh=0.65, bottom_thresh=1.4)
 
     # Very short
     if h < 0.35 * avg_height or w < 0.3 * avg_height :
-        return 'sandhangan'
+        return 'pasangan'
     # Base in the center, large enough
     elif h >= 0.7 * avg_height and (avg_y - 0.3 * avg_height) < cy < (avg_y + 0.3 * avg_height):
-        return 'pasangan' # Originially base
+        return 'sandhangan' # Originially base
     # Significantly below baseline
     elif cy > avg_y + 0.35 * avg_height:
         return 'base' # Originally pasangan
@@ -160,7 +161,7 @@ def integrate_pasangan(base_stream, pasangan_stream):
 async def predict(file: UploadFile = File(...)):
     img_bytes = await file.read()
     pil_image = Image.open(io.BytesIO(img_bytes)).convert("RGB")
-    char_segments = segment_characters(pil_image)  # Now works with updated function
+    char_segments = segment_by_projection(pil_image)  # Now works with updated function
 
     bboxes = [seg['bbox'] for seg in char_segments]
     avg_h = np.mean([h for _, _, _, h in bboxes])
