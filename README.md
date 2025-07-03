@@ -9,12 +9,7 @@ This project aims to preserve and promote the Javanese script by enabling machin
 - **Angka**
 
 > 🧪 Currently in beta — more features and improvements are on the way!
-
----
-
-## 🚀 Demo (Coming Soon)
-The model will soon be deployed on a web app using **Flask**, allowing users to upload or draw Aksara characters for instant classification.
-
+Still very barebone, updates coming soon
 ---
 
 ## 📦 Features
@@ -25,11 +20,11 @@ The model will soon be deployed on a web app using **Flask**, allowing users to 
 - Evaluation logs after each epoch
 
 ### Planned:
-- ✅ Model retrained with segmented dataset
-- ⏳ Real-time drawing input via canvas
-- ⏳ Web UI with confidence scores
+- ⏳ Model retrained with segmented dataset
 - ⏳ Dataset expansion & noise filtering
-- ⏳ Support for compound syllables
+- ⏳ Numerical characters (Aksara angka)
+- ⏳ Murda characters (Aksara murda)
+- ⏳ Support for compound syllables (More pasangan, sandhangan, and their combinations)
 
 ---
 
@@ -51,6 +46,25 @@ Custom-built dataset of Aksara Jawa characters, including segmentation and augme
 - **Optimizer:** Adam
 - **Loss Function:** CrossEntropyLoss
 - **Epochs:** 30
-- **Accuracy:** ~74.4% (baseline on initial dataset)
+- **Accuracy:** ~93.40% (baseline on initial dataset)
 
 ---
+
+## 🙏 Acknowledgements
+- PyTorch team
+- Javanese script community
+- Wordpress Romonadha (https://romonadha.wordpress.com/2019/12/21/font-jawa/)
+- OpenCV, Matplotlib, and other amazing open-source tools
+- My code supervisors ChatGPT, Claude, Gemini
+
+---
+
+## 🧩 Contributing
+Have suggestions or want to contribute Aksara samples? Feel free to open an issue or pull request!
+
+---
+
+## ⚠️ Licensing of Assets
+This repository uses public assets (such as fonts and character samples) that are **not redistributed** and remain under their respective licenses. You must independently obtain those resources if you wish to reproduce or train the model.
+
+The code in this project is released under the [MIT License](LICENSE).
