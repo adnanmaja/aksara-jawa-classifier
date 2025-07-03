@@ -54,11 +54,14 @@ sandhangan_map = ['cakra', 'cakra2', 'keret',
 ]
 
 sandhanganSound_map = {
+    # Vowels
     'suku': 'u',
     'wulu': 'i',
     'taling': 'e',
     'taling_tarung': 'o',
     'pepet': 'ê',
+
+    # Consonants
     'cakra': 'r',
     'wignyan': 'h',
     'keret': 'ng',  
@@ -67,7 +70,7 @@ sandhanganSound_map = {
 
 pasangan_map = [
 'b', 'c', 'd', 'dh', 'g',
-'h', 'j', 'k', 'l', 'm',
+'m', 'j', 'k', 'l', 'h',
 'n', 'ng', 'ny', 'p', 'r',
 's', 't', 'th', 'w', 'y'
 ]
@@ -85,9 +88,12 @@ def basePredict(images):
     tensor = transform(images).unsqueeze(0).to(device)
     with torch.no_grad():
         outputs = base_model(tensor)
+        probs = torch.nn.functional.softmax(outputs, dim=1)
+        conf, pred_idx = torch.max(probs, dim=1)
+        print(f"[DEBUG] Predicted {label_map[pred_idx.item()]} with confidence {conf.item():.2f}")
         pred_idx = torch.argmax(outputs, dim=1).item()
         base_results.append(label_map[pred_idx])
-    return base_results
+    return label_map[pred_idx]
 
 def sandhanganPredict(images):
     sandhangan_results = []
@@ -96,7 +102,9 @@ def sandhanganPredict(images):
     tensor = transform(images).unsqueeze(0).to(device)
     with torch.no_grad():
         outputs = sandhangan_model(tensor)
-        pred_idx = torch.argmax(outputs, dim=1).item()
+        probs = torch.nn.functional.softmax(outputs, dim=1)
+        conf, pred_idx = torch.max(probs, dim=1)
+        print(f"[DEBUG] Predicted {sandhangan_map[pred_idx.item()]} with confidence {conf.item():.2f}")
     return sandhangan_map[pred_idx]
 
 def pasanganPredict(images):
@@ -107,6 +115,7 @@ def pasanganPredict(images):
     with torch.no_grad():
         outputs = pasangan_model(tensor)
         pred_idx = torch.argmax(outputs, dim=1).item()
+        pasangan_results.append(pasangan_map[pred_idx])
     return pasangan_map[pred_idx]
 
 def classify_region(bbox, avg_height, avg_y, top_thresh=0.65, bottom_thresh=1.4):
@@ -114,51 +123,74 @@ def classify_region(bbox, avg_height, avg_y, top_thresh=0.65, bottom_thresh=1.4)
     cy = y + h / 2
 
     # Very short
-    if h < 0.35 * avg_height or w < 0.3 * avg_height :
-        return 'pasangan'
+    if h < 0.5 * avg_height or w < 0.3 * avg_height :
+        return 'sandhangan' # Originally sandhangan
     # Base in the center, large enough
     elif h >= 0.7 * avg_height and (avg_y - 0.3 * avg_height) < cy < (avg_y + 0.3 * avg_height):
-        return 'sandhangan' # Originially base
+        return 'pasangan' # Originially base
     # Significantly below baseline
     elif cy > avg_y + 0.35 * avg_height:
         return 'base' # Originally pasangan
     else:
-        return 'sandhangan'
+        return 'sandhangan' # Originally sandhangan
         
-def transliterate_grouped(resultsGrouped):
+
+def transliterate_grouped(joined_labels):
     result = []
-    for base, sandhangan in resultsGrouped:
-        if sandhangan and sandhangan in sandhanganSound_map:
-            vowel = sandhanganSound_map[sandhangan]
-            result.append(base[0] + vowel)  # crude base-to-syllable mapping
+
+    for label in joined_labels:
+        if '_' in label:
+            parts = label.split('_')
+            base = parts[0]
+            modifiers = parts[1:]
+
+            base_char = base
+            vowel = ''
+            final_consonants = ''
+
+            for mod in modifiers:
+                if mod in sandhanganSound_map:
+                    sound = sandhanganSound_map[mod]
+                    if sound in ['u', 'e', 'o', 'ê']:  # vowels
+                        vowel = sound
+                        base_char = base[0]
+                        print(f"IM A VOWEL → {mod} → {sound}")
+                    else:
+                        final_consonants += sound  # e.g. 'h', 'ng'
+                        print(f"NOT a vowel → {mod} → {sound}")
+                else:
+                    base += mod  # pasangan
+
+            result.append(base_char + vowel + final_consonants)
         else:
-            result.append(base)
+            result.append(label)
+
     return ''.join(result)
 
+
 def integrate_pasangan(base_stream, pasangan_stream):
-    final = []
-    pasangan_buffer = []
+    result = []
 
+    result = []
     for i, base in enumerate(base_stream):
-        final.append(base)
+        if base != '_':
+            result.append(base)
 
-        if i < len(pasangan_stream) and pasangan_stream[i] != '_':
-            pasangan_buffer.append(pasangan_stream[i])
+            # pasangan is stored at the NEXT index
+            if i + 1 < len(pasangan_stream) and pasangan_stream[i + 1] != '_':
+                pasangan = pasangan_stream[i + 1]
+                result[-1] += f"_{pasangan}"
+        else:
+            continue  
 
-    # Now interleave pasangan after base if needed
-    # Or you can attach to previous base if context says no vowel between
-    final_with_pasangan = []
-
-    for char in final:
-        final_with_pasangan.append(char)
-        if pasangan_buffer:
-            final_with_pasangan.append(pasangan_buffer.pop(0))
-
-    return final_with_pasangan
+        if pasangan_stream[i] != '_':
+            if result:
+                result[-1] += f"_{pasangan_stream[i]}"
+    return result
 
 
 @app.post("/predict")
-async def predict(file: UploadFile = File(...)):
+async def predict(file : UploadFile = File(...)):
     img_bytes = await file.read()
     pil_image = Image.open(io.BytesIO(img_bytes)).convert("RGB")
     char_segments = segment_by_projection(pil_image)  # Now works with updated function
@@ -178,29 +210,41 @@ async def predict(file: UploadFile = File(...)):
         role = classify_region(seg['bbox'], avg_h, avg_y)
 
         if role == 'base':
-            base_preds.append(basePredict(seg['image'])[0])
+            base_preds.append(basePredict(seg['image']))
             sandhangan_preds.append('_')
             pasangan_preds.append('_')
 
         elif role == 'sandhangan':
-            sandhangan_preds.append(sandhanganPredict(seg['image'])[0])
+            pred = sandhanganPredict(seg['image'])
+            print("🟢 Sandhangan detected:", pred)  # ← debug line
+            sandhangan_preds.append(pred)
             base_preds.append('_')
             pasangan_preds.append('_')
 
         elif role == 'pasangan':
-            pasangan_preds.append(pasanganPredict(seg['image'])[0])
+            pasangan_preds.append(pasanganPredict(seg['image']))
             base_preds.append('_')
             sandhangan_preds.append('_')
+            
 
-
+    print(f"[BEFORE GROUPING AND INTEGRATING] Base: {len(base_preds)}, Sandhangan: {len(sandhangan_preds)}, Pasangan: {len(pasangan_preds)}")
     integrated_result = integrate_pasangan(base_preds, pasangan_preds)
     grouped_result = join_base_and_sandhangan(base_preds, sandhangan_preds)
+    print(f"[GROUPED_RESULT] Type: {type(grouped_result)}, {grouped_result}")
     grouped = group_sandhangan(grouped_result)
-    final_text = transliterate_grouped(grouped)
+    print(f"[GROUPED] Type: {type(grouped)}, {grouped}")
+    final_text = transliterate_grouped(grouped_result)
 
     return {
     "base": base_preds,
     "sandhangan": sandhangan_preds,
-    "pasangan": pasangan_preds, 
-    "prediction": final_text}
+    "pasangan": pasangan_preds,
+    "integrate_pasangan()": integrated_result, 
+    "joined_base_and_sandhangan()": grouped_result,
+    "group_sandhangan()": grouped,
+    "transliterate_grouped()": final_text}
+
+if __name__ == "__main__":
+    testimg = Image.open("TESTS/test_4.png")
+    predict(testimg)
 

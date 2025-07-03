@@ -3,20 +3,25 @@ import numpy as np
 from PIL import Image
 from scipy.signal import find_peaks
 
+def pad_and_resize(img, size=224, pad_color=255, padding=100):
+    if isinstance(img, Image.Image):
+        img = np.array(img.convert("L"))
 
-def segment_characters(pil_image, min_width=10, min_height=10):
-    import numpy as np
-    import cv2
-    from PIL import Image
+    h, w = img.shape
+    padded = np.full((h + 2 * padding, w + 2 * padding), pad_color, dtype=np.uint8)
+    padded[padding:padding + h, padding:padding + w] = img
 
-    def pad_and_resize(img_array, size=224, pad_color=255, padding=100):
-        h, w = img_array.shape
-        new_img = np.full((h + 2 * padding, w + 2 * padding), pad_color, dtype=np.uint8)
-        new_img[padding:padding+h, padding:padding+w] = img_array
-        pil = Image.fromarray(new_img)
-        return pil.resize((size, size), Image.Resampling.LANCZOS)
+    scale = min((size - 20) / padded.shape[1], (size - 20) / padded.shape[0])
+    new_w, new_h = int(padded.shape[1] * scale), int(padded.shape[0] * scale)
+    resized = cv2.resize(padded, (new_w, new_h), interpolation=cv2.INTER_AREA)
 
-    def split_vertically_or_horizontally_if_needed(gray_char_img, aspect_thresh=2.0):
+    canvas = np.full((size, size), pad_color, dtype=np.uint8)
+    x_off, y_off = (size - new_w)//2, (size - new_h)//2
+    canvas[y_off:y_off+new_h, x_off:x_off+new_w] = resized
+
+    return Image.fromarray(canvas).convert("RGB")
+
+def split_vertically_or_horizontally_if_needed(gray_char_img, aspect_thresh=2.0):
         h, w = gray_char_img.shape
 
         if h / w > aspect_thresh:
@@ -44,6 +49,13 @@ def segment_characters(pil_image, min_width=10, min_height=10):
 
         # Otherwise don't split
         return [gray_char_img]
+
+def segment_characters(pil_image, min_width=10, min_height=10):
+    import numpy as np
+    import cv2
+    from PIL import Image
+
+    
 
     # Convert to grayscale
     if isinstance(pil_image, str):
@@ -120,19 +132,18 @@ def segment_by_projection(pil_image, min_char_width=5, min_char_height=5):
                 h = y2 - y1
                 if w > min_char_width and h > min_char_height:
                     char_crop = gray[y1:y2, char_start:char_end]
-                    pil_crop = Image.fromarray(char_crop).convert('RGB')
+                    padded_img = pad_and_resize(char_crop, size=224, pad_color=255, padding=90)
                     segments.append({
-                        'image': pil_crop,
+                        'image': padded_img,
                         'bbox': (char_start, y1, w, h)
                     })
-
     return segments
 
 
 
 if __name__ == "__main__":
     import os
-    image = Image.open("./TESTS/test_5.png")
+    image = Image.open("./TESTS/test_4.png")
     segments = segment_by_projection(image) 
     output_dir = "./DATA/segmented_chars"
     os.makedirs(output_dir, exist_ok=True)

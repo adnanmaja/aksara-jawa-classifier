@@ -194,7 +194,6 @@ def group_sandhangan(predictions):
     return grouped
 
 def join_base_and_sandhangan(base_preds, sandhangan_preds):
-   
     joined = []
     last_base_idx = -1
 
@@ -202,31 +201,34 @@ def join_base_and_sandhangan(base_preds, sandhangan_preds):
         base = base_preds[i]
         sandh = sandhangan_preds[i]
 
-        if base != '_' and sandh == '_':
+        if base != "_" and sandh == "_":
             joined.append(base)
             last_base_idx = len(joined) - 1
 
-        elif base != '_' and sandh != '_':
+        elif base != "_" and sandh != "_":
             joined.append(f"{base}_{sandh}")
             last_base_idx = len(joined) - 1
 
-        elif base == '_' and sandh != '_':
+        elif base == "_" and sandh != "_":
             if last_base_idx >= 0:
-                # Append sandhangan to previous base
-                if '_' in joined[last_base_idx]:
-                    base_part, prev_sandh = joined[last_base_idx].split('_', 1)
-                    joined[last_base_idx] = f"{base_part}_{sandh}"  # overwrite previous sandhangan
+                # Attach sandhangan to previous base
+                prev = joined[last_base_idx]
+                if '_' in prev:
+                    parts = prev.split('_')
+                    joined[last_base_idx] = f"{parts[0]}_{sandh}"
                 else:
-                    joined[last_base_idx] = f"{joined[last_base_idx]}_{sandh}"
+                    joined[last_base_idx] = f"{prev}_{sandh}"
+                print(f"[DEBUG] Attached sandhangan '{sandh}' to previous base '{joined[last_base_idx]}'")
             else:
-                # no base to attach to
+                # orphan sandhangan
                 joined.append(f"_{sandh}")
         else:
-            joined.append('_')  # blank segment
-    
+            joined.append("_")
+
     return joined
 
-# openIMG = Image.open("TESTS/test_4.png")
-# result = parse_aksara_sentence(openIMG)
-# for r in result:
-#     print(r)
+if __name__ == "__main__":
+    openIMG = Image.open("TESTS/test_4.png")
+    result = parse_aksara_sentence(openIMG)
+    for r in result:
+        print(r)
