@@ -56,29 +56,31 @@ def predict():
         base_preds = []
         sandhangan_preds = []
         pasangan_preds = []
+
+        base_debug = []
+        sandhangan_debug = []
+        pasangan_debug = []
         
         for seg in char_segments:
             role = classify_region(seg['bbox'], avg_h, avg_y)
 
             if role == 'base':
                 base_preds.append(basePredict(seg['image']))
+                base_debug.append(baseDebug(seg['image']))
                 sandhangan_preds.append('_')
                 pasangan_preds.append('_')
 
             elif role == 'sandhangan':
-                pred = sandhanganPredict(seg['image'])
-                print("🟢 Sandhangan detected:", pred)  # debug line
-                sandhangan_preds.append(pred)
+                sandhangan_preds.append(sandhanganPredict(seg['image']))
+                sandhangan_debug.append(sandhanganDebug(seg['image']))
                 base_preds.append('_')
                 pasangan_preds.append('_')
 
             elif role == 'pasangan':
                 pasangan_preds.append(pasanganPredict(seg['image']))
+                pasangan_debug.append(pasanganDebug(seg['image']))
                 base_preds.append('_')
                 sandhangan_preds.append('_')
-        base_debug = baseDebug(seg['image'])
-        sandhangan_debug = sandhanganDebug(seg['image'])
-        pasangan_debug = pasanganDebug(seg['image'])
 
         print(f"[BEFORE GROUPING AND INTEGRATING] Base: {len(base_preds)}, Sandhangan: {len(sandhangan_preds)}, Pasangan: {len(pasangan_preds)}")
         integrated_result = integrate_pasangan(base_preds, pasangan_preds)
@@ -87,10 +89,6 @@ def predict():
         grouped = group_sandhangan(grouped_result)
         print(f"[GROUPED] Type: {type(grouped)}, {grouped}")
         final_text = transliterate_grouped(grouped_result)
-
-        print(base_debug)
-        print(sandhangan_debug)
-        print(pasangan_debug)
 
         return jsonify({
             "debug": {
