@@ -6,7 +6,6 @@
     <title>Aksara Jawa OCR</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     
-    <link rel="stylesheet" href="your-styles.css">
     <style>
         * {
             margin: 0;
@@ -16,32 +15,67 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #A2CC8A 0%, #4DAF7C 100%);
+            background: linear-gradient(135deg, #0B1A0B 0%, #5D3F6A 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 10px;
             color: #333;
         }
 
         .container {
-            width: 96%;
-            height: 98%;
+            width: 100%;
+            max-width: 1200px;
             margin: 0 auto;
             background: #f9f9f9;
             backdrop-filter: blur(10px);
             border-radius: 20px;
-            padding: 30px;
+            padding: 20px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            flex-grow: 1;
+            position: relative;
+        }
 
+        .language-selector {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: white;
+            border-radius: 10px;
+            padding: 8px 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 1000;
+        }
+
+        .language-selector select {
+            border: none;
+            background: transparent;
+            font-size: 0.9rem;
+            color: #4a5568;
+            cursor: pointer;
+            outline: none;
+            padding: 4px 8px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .language-selector select:hover {
+            background: #f8fafc;
+        }
+
+        .language-selector i {
+            color: #667eea;
+            font-size: 1rem;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 120px;
+            margin-bottom: 40px;
+            padding-top: 50px;
         }
 
         .header h1 {
-            font-size: 4rem;
+            font-size: clamp(2rem, 8vw, 4rem);
             color: #4a5568;
             margin-bottom: 5px;
             background: linear-gradient(135deg, #667eea, #4DAF7C);
@@ -52,7 +86,8 @@
 
         .header p {
             color: #718096;
-            font-size: 1.8rem;
+            font-size: clamp(1rem, 4vw, 1.8rem);
+            padding: 0 10px;
         }
 
         .upload-section {
@@ -60,9 +95,10 @@
             margin: 0 auto;
             border: 3px dashed #cbd5e0;
             border-radius: 15px;
-            padding: 40px;
+            padding: clamp(20px, 5vw, 40px);
             text-align: center;
-            width: 65%;
+            width: 100%;
+            max-width: 600px;
             margin-bottom: 30px;
             transition: all 0.3s ease;
             cursor: pointer;
@@ -81,20 +117,20 @@
         }
 
         .upload-icon {
-            font-size: 4rem;
+            font-size: clamp(1rem, 5vw, 3rem);
             color: #a0aec0;
             margin-bottom: 20px;
         }
 
         .upload-text {
-            font-size: 1.4rem;
+            font-size: clamp(1rem, 4vw, 1.4rem);
             color: #4a5568;
             margin-bottom: 10px;
         }
 
         .upload-subtext {
             color: #718096;
-            font-size: 1rem;
+            font-size: clamp(0.8rem, 3vw, 1rem);
         }
 
         .file-input {
@@ -108,10 +144,11 @@
             padding: 12px 24px;
             border: none;
             border-radius: 8px;
-            font-size: 1rem;
+            font-size: clamp(0.9rem, 3vw, 1rem);
             cursor: pointer;
             transition: all 0.3s ease;
             margin-top: 15px;
+            touch-action: manipulation;
         }
 
         .btn:hover {
@@ -122,38 +159,36 @@
         .preview-section {
             display: none;
             margin-bottom: 30px;
-            align-items: center;
-            justify-content: center;
+            text-align: center;
         }
 
         .image-preview {
             max-width: 100%;
-            max-height: 100%;
+            max-height: 60vh;
             border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto;
         }
 
         .results-section {
             display: none;
             background: #f8fafc;
             border-radius: 15px;
-            padding: 30px;
+            padding: clamp(15px, 5vw, 30px);
             margin-bottom: 20px;
-            width: 65%;
+            width: 100%;
+            max-width: 800px;
             margin: 0 auto;
         }
 
         .results-header {
-            font-size: 1.5rem;
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
             color: #4a5568;
             margin-bottom: 20px;
             display: flex;
             align-items: center;
             gap: 10px;
+            flex-wrap: wrap;
         }
 
         .confidence-badge {
@@ -167,8 +202,8 @@
 
         .prediction-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
             margin-bottom: 20px;
         }
 
@@ -179,6 +214,10 @@
             text-align: center;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
             transition: transform 0.2s ease;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .prediction-item:hover {
@@ -186,7 +225,7 @@
         }
 
         .character {
-            font-size: 2rem;
+            font-size: clamp(1.5rem, 5vw, 2rem);
             font-weight: bold;
             color: #4a5568;
             margin-bottom: 5px;
@@ -194,13 +233,13 @@
 
         .transliteration {
             color: #667eea;
-            font-size: 0.9rem;
+            font-size: clamp(0.8rem, 3vw, 0.9rem);
             font-weight: 500;
         }
 
         .processing {
             text-align: center;
-            padding: 40px;
+            padding: 40px 20px;
             color: #718096;
         }
 
@@ -226,8 +265,10 @@
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: clamp(0.8rem, 3vw, 0.9rem);
             transition: all 0.3s ease;
+            margin: 5px;
+            touch-action: manipulation;
         }
 
         .reset-btn:hover {
@@ -246,6 +287,7 @@
         .metadata h3 {
             color: #4a5568;
             margin-bottom: 10px;
+            font-size: clamp(1rem, 4vw, 1.2rem);
         }
 
         .metadata-grid {
@@ -266,10 +308,12 @@
             color: white;
             border: none;
             padding: 10px 20px;
-            border-radius: 4.8px;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 0.6rem;
+            font-size: clamp(0.7rem, 3vw, 0.8rem);
             transition: all 0.3s ease;
+            margin: 5px;
+            touch-action: manipulation;
         }
 
         .debug-btn:hover {
@@ -281,14 +325,15 @@
             display: none;
             background: #f8fafc;
             border-radius: 15px;
-            padding: 30px;
+            padding: clamp(15px, 5vw, 30px);
             margin-bottom: 20px;
-            width: 65%;
+            width: 100%;
+            max-width: 800px;
             margin: 0 auto;
         }
 
         .debug-header {
-            font-size: 1.4rem;
+            font-size: clamp(1.2rem, 4vw, 1.4rem);
             color: #4a5568;
             margin-bottom: 20px;
             display: flex;
@@ -314,7 +359,7 @@
         .debug-item h4 {
             color: #667eea;
             margin-bottom: 10px;
-            font-size: 1.1rem;
+            font-size: clamp(1rem, 4vw, 1.1rem);
         }
 
         .debug-item pre {
@@ -323,7 +368,7 @@
             border-radius: 5px;
             overflow-x: auto;
             font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
+            font-size: clamp(0.8rem, 3vw, 0.9rem);
             color: #4a5568;
         }
 
@@ -332,20 +377,22 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            margin-top: 120px;
+            margin-top: 60px;
+            padding: 0 20px;
         }
 
         .footer h1 {
             color: #353030;
-            font-size: 1.3rem;
+            font-size: clamp(1.1rem, 4vw, 1.3rem);
             margin-top: 40px;
             opacity: 0.5;
         }
 
         .footer p {
-            font-size: 1rem;
+            font-size: clamp(0.9rem, 3vw, 1rem);
             color: #353030;
             opacity: 0.5;
+            text-align: center;
         }
 
         .social-links-container {
@@ -367,7 +414,7 @@
 
         .social-item a {
             color: #353030; 
-            font-size: 20px; 
+            font-size: clamp(18px, 5vw, 20px); 
             transition: color 0.3s ease; 
             opacity: 0.6;
         }
@@ -387,73 +434,198 @@
         .social-item a .fa-github:hover {
             color: #333; 
         }
+
+        .social-text {
+            font-size: clamp(0.8rem, 3vw, 0.9rem);
+        }
+
+        /* Button container for better mobile layout */
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        /* Mobile-specific adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 5px;
+            }
+
+            .container {
+                padding: 15px;
+                border-radius: 15px;
+            }
+
+            .header {
+                margin-bottom: 30px;
+                padding-top: 40px;
+            }
+
+            .language-selector {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin-bottom: 20px;
+                align-self: flex-end;
+            }
+
+            .prediction-grid {
+                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+                gap: 8px;
+            }
+
+            .prediction-item {
+                padding: 10px;
+                min-height: 70px;
+            }
+
+            .social-links-container {
+                gap: 10px;
+            }
+
+            .social-item {
+                gap: 5px;
+            }
+
+            .upload-section {
+                padding: 20px 15px;
+            }
+
+            .footer {
+                margin-top: 40px;
+            }
+        }
+
+        /* Very small screens */
+        @media (max-width: 480px) {
+            .prediction-grid {
+                grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+                gap: 6px;
+            }
+
+            .prediction-item {
+                padding: 8px;
+                min-height: 60px;
+            }
+
+            .social-links-container {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .metadata-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .button-container {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn, .reset-btn, .debug-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        /* Landscape mobile adjustments */
+        @media (max-height: 600px) and (orientation: landscape) {
+            .header {
+                margin-bottom: 20px;
+                padding-top: 20px;
+            }
+
+            .footer {
+                margin-top: 30px;
+            }
+
+            .image-preview {
+                max-height: 40vh;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="language-selector">
+            <i class="fas fa-globe"></i>
+            <select id="languageSelector" onchange="changeLanguage(this.value)">
+                <option value="en">English</option>
+                <option value="id">Indonesia</option>
+            </select>
+        </div>
+
         <div class="header">
-            <h1>Aksara Jawa Scanner</h1>
-            <p>Upload your handwritten Javanese script image for recognition</p>
+            <h1 id="mainTitle">Aksara Jawa Scanner</h1>
+            <p id="mainSubtitle">Upload your handwritten Javanese script image for recognition</p>
         </div>
 
         <div class="upload-section" id="uploadSection">
             <div class="upload-icon">📸</div>
-            <div class="upload-text">Drop your image here or click to browse</div>
-            <div class="upload-subtext">Supports JPG, PNG, WebP files</div>
+            <div class="upload-text" id="uploadText">Drop your image here or click to browse</div>
+            <div class="upload-subtext" id="uploadSubtext">Supports JPG, PNG, WebP files</div>
             <input type="file" id="fileInput" class="file-input" accept="image/*">
-            <button class="btn">
+            <button class="btn" id="chooseFileBtn">
                 Choose File
             </button>
         </div>
 
         <div class="preview-section" id="previewSection">
             <img id="imagePreview" class="image-preview" alt="Uploaded image preview">
-            <div style="text-align: center;">
-                <button class="btn" onclick="processImage()">Process Image</button>
-                <button class="reset-btn" onclick="resetInterface()">Reset</button>
+            <div class="button-container">
+                <button class="btn" id="processBtn" onclick="processImage()">Process Image</button>
+                <button class="reset-btn" id="resetBtn1" onclick="resetInterface()">Reset</button>
             </div>
         </div>
 
         <div class="processing" id="processingSection" style="display: none;">
             <div class="spinner"></div>
-            <p>Processing your Javanese script...</p>
+            <p id="processingText">Processing your Javanese script...</p>
         </div>
 
         <div class="results-section" id="resultsSection">
             <div class="results-header">
-                <span>Recognition Results</span>
+                <span id="resultsTitle">Recognition Results</span>
             </div>
             
             <div class="prediction-grid" id="predictionGrid">
             </div>
             
-            <button class="reset-btn" onclick="resetInterface()">Back</button>
-            <button class="debug-btn" onclick="toggleDebugSection()">Debug</button>
+            <div class="button-container">
+                <button class="reset-btn" id="resetBtn2" onclick="resetInterface()">Back</button>
+                <button class="debug-btn" id="debugBtn" onclick="toggleDebugSection()">Debug</button>
+            </div>
         </div>
 
         <div class="debug-section" id="debugSection">
             <div class="debug-header">
-                <span>Debug Results</span>
+                <span id="debugTitle">Debug Results</span>
             </div>
 
             <div class="debug-grid" id="debugGrid">
             </div>
             
-            <button class="reset-btn" onclick="hideDebugSection()">Hide Debug</button>
+            <div class="button-container">
+                <button class="reset-btn" id="hideDebugBtn" onclick="hideDebugSection()">Hide Debug</button>
+            </div>
         </div>
 
         <footer class="footer" id="footerSection">
             <h1>by Rafa Atmaja</h1>
-            <p>Free for personal and commercial use</p>
-            <p>This project was made as part of my OCR learning, feedback is absolutely welcomed</p>
+            <p id="footerText1">Free for personal and commercial use</p>
+            <p id="footerText2">This project was made as part of my OCR learning, feedback is absolutely welcomed</p>
             
             <div class="social-links-container">
                 <div class="social-item">
                     <a target="_blank" aria-label="Line Profile">
                         <i class="fa-brands fa-line"></i>
                     </a>
-                    <p class="social-text">rafaadmaja</p> </div>
-
+                    <p class="social-text">rafaadmaja</p>
+                </div>
 
                 <div class="social-item">
                     <a href="https://www.github.com/adnanmaja/aksara-jawa-classifier" target="_blank" aria-label="GitHub Profile">
@@ -461,7 +633,6 @@
                     </a>
                     <p class="social-text">adnanmaja</p>
                 </div>
-
 
                 <div class="social-item">
                     <a href="https://www.linkedin.com/in/rafa-adnan-0329b4321" target="_blank" aria-label="LinkedIn Profile">
@@ -473,182 +644,6 @@
         </footer>
     </div>
 
-
-    <script>
-        let uploadedImage = null;
-        let debugData = null; // Store debug data globally
-
-        // File input handling
-        const fileInput = document.getElementById('fileInput');
-        const uploadSection = document.getElementById('uploadSection');
-        const previewSection = document.getElementById('previewSection');
-        const imagePreview = document.getElementById('imagePreview');
-        const processingSection = document.getElementById('processingSection');
-        const resultsSection = document.getElementById('resultsSection');
-        const footerSection = document.getElementById('footerSection')
-        const debugSection = document.getElementById('debugSection')
-
-        fileInput.addEventListener('change', handleFileSelect);
-        uploadSection.addEventListener('click', () => fileInput.click());
-        uploadSection.addEventListener('dragover', handleDragOver);
-        uploadSection.addEventListener('dragleave', handleDragLeave);
-        uploadSection.addEventListener('drop', handleDrop);
-
-        function handleFileSelect(e) {
-            const file = e.target.files[0];
-            if (file) {
-                displayImagePreview(file);
-            }
-        }
-
-        function handleDragOver(e) {
-            e.preventDefault();
-            uploadSection.classList.add('dragover');
-        }
-
-        function handleDragLeave(e) {
-            e.preventDefault();
-            uploadSection.classList.remove('dragover');
-        }
-
-        function handleDrop(e) {
-            e.preventDefault();
-            uploadSection.classList.remove('dragover');
-            const file = e.dataTransfer.files[0];
-            if (file && file.type.startsWith('image/')) {
-                displayImagePreview(file);
-            }
-        }
-
-        function displayImagePreview(file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                imagePreview.src = e.target.result;
-                uploadedImage = file;
-                uploadSection.style.display = 'none';
-                previewSection.style.display = 'block';
-                resultsSection.style.display = 'none';
-                processingSection.style.display = 'none';
-                debugSection.style.display = 'none';
-            };
-            reader.readAsDataURL(file);
-        }
-
-        async function processImage() {
-            if (!uploadedImage) return;
-
-            // Hide preview and show processing
-            previewSection.style.display = 'none';
-            processingSection.style.display = 'block';
-            resultsSection.style.display = 'none';
-            debugSection.style.display = 'none';
-
-            // API call
-            await callOCRAPI(uploadedImage);
-        }
-
-        async function callOCRAPI(imageFile) {
-            const formData = new FormData();
-            formData.append('file', imageFile);
-            
-            try {
-                const response = await fetch('http://localhost:8000/predict', { 
-                    method: 'POST',
-                    body: formData
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const results = await response.json();
-                
-                // Store debug data globally
-                debugData = results.debug;
-                
-                displayResults(results.prediction); 
-            } catch (error) {
-                console.error('OCR API Error:', error);
-                alert('Failed to process image. Please try again.');
-                resetInterface();
-            }
-        }
-
-        function displayResults(predictions) {
-            const predictionGrid = document.getElementById('predictionGrid');
-            
-            predictionGrid.innerHTML = '';
-
-            const fullTransliteration = predictions; 
-
-            const item = document.createElement('div');
-            item.className = 'prediction-item'; 
-            item.style.gridColumn = '1 / -1'; 
-            item.style.fontSize = '2.5rem'; 
-            item.style.padding = '30px'; 
-            item.style.fontWeight = 'bold';
-            item.style.color = '#4a5568';
-            item.style.display = 'flex';
-            item.style.justifyContent = 'center';
-            item.style.alignItems = 'center';
-
-            item.innerHTML = `
-                <div class="character">${fullTransliteration}</div>
-            `;
-            predictionGrid.appendChild(item);
-
-            processingSection.style.display = 'none';
-            resultsSection.style.display = 'block';
-            uploadSection.style.display = 'block';
-            debugSection.style.display = 'none';
-        }
-
-        function populateDebugSection() {
-            const debugGrid = document.getElementById('debugGrid');
-            debugGrid.innerHTML = '';
-            
-            if (!debugData) {
-                debugGrid.innerHTML = '<p>No debug data available</p>';
-                return;
-            }
-
-            // Iterate through debug object and display each key-value pair
-            for (const [key, value] of Object.entries(debugData)) {
-                const debugItem = document.createElement('div');
-                debugItem.className = 'debug-item';
-                
-                debugItem.innerHTML = `
-                    <h4>${key}</h4>
-                    <pre>${JSON.stringify(value, null, 2)}</pre>
-                `;
-                
-                debugGrid.appendChild(debugItem);
-            }
-        }
-
-        function toggleDebugSection() {
-            if (debugSection.style.display === 'none' || debugSection.style.display === '') {
-                populateDebugSection();
-                debugSection.style.display = 'block';
-            } else {
-                debugSection.style.display = 'none';
-            }
-        }
-
-        function hideDebugSection() {
-            debugSection.style.display = 'none';
-        }
-
-        function resetInterface() {
-            uploadSection.style.display = 'block';
-            previewSection.style.display = 'none';
-            processingSection.style.display = 'none';
-            resultsSection.style.display = 'none';
-            debugSection.style.display = 'none';
-            fileInput.value = '';
-            uploadedImage = null;
-            debugData = null;
-        }
-    </script>
+    <script src="/static/script.js"></script>
 </body>
 </html>

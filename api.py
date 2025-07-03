@@ -76,6 +76,9 @@ def predict():
                 pasangan_preds.append(pasanganPredict(seg['image']))
                 base_preds.append('_')
                 sandhangan_preds.append('_')
+        base_debug = baseDebug(seg['image'])
+        sandhangan_debug = sandhanganDebug(seg['image'])
+        pasangan_debug = pasanganDebug(seg['image'])
 
         print(f"[BEFORE GROUPING AND INTEGRATING] Base: {len(base_preds)}, Sandhangan: {len(sandhangan_preds)}, Pasangan: {len(pasangan_preds)}")
         integrated_result = integrate_pasangan(base_preds, pasangan_preds)
@@ -85,14 +88,9 @@ def predict():
         print(f"[GROUPED] Type: {type(grouped)}, {grouped}")
         final_text = transliterate_grouped(grouped_result)
 
-        # Get debug info from the last segment (you might want to modify this logic)
-        if char_segments:
-            last_seg = char_segments[-1]
-            base_debug = baseDebug(last_seg['image'])
-            sandhangan_debug = sandhanganDebug(last_seg['image'])
-            pasangan_debug = pasanganDebug(last_seg['image'])
-        else:
-            base_debug = sandhangan_debug = pasangan_debug = None
+        print(base_debug)
+        print(sandhangan_debug)
+        print(pasangan_debug)
 
         return jsonify({
             "debug": {
@@ -117,10 +115,5 @@ def too_large(e):
     return jsonify({'error': 'File too large'}), 413
 
 if __name__ == "__main__":
-    # For development
     app.run(debug=True, host='0.0.0.0', port=5000)
     
-    # For testing with local image (commented out for production)
-    # testimg = Image.open("TESTS/test_4.png")
-    # with app.test_client() as client:
-    #     # This would need to be adapted for actual testing

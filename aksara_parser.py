@@ -82,8 +82,7 @@ def basePredict(images):
         outputs = base_model(tensor)
         probs = torch.nn.functional.softmax(outputs, dim=1)
         conf, pred_idx = torch.max(probs, dim=1)
-        print(f"[DEBUG] Predicted {label_map[pred_idx.item()]} with confidence {conf.item():.2f}")
-        base_debug = f"[DEBUG] Predicted {label_map[pred_idx.item()]} with confidence {conf.item():.2f}"
+        print(f"[BASE] Predicted {label_map[pred_idx.item()]} with confidence {conf.item():.2f}")
         pred_idx = torch.argmax(outputs, dim=1).item()
         base_results.append(label_map[pred_idx])
     return label_map[pred_idx]
@@ -97,8 +96,6 @@ def sandhanganPredict(images):
         outputs = sandhangan_model(tensor)
         probs = torch.nn.functional.softmax(outputs, dim=1)
         conf, pred_idx = torch.max(probs, dim=1)
-        print(f"[DEBUG] Predicted {sandhangan_map[pred_idx.item()]} with confidence {conf.item():.2f}")
-        sandhangan_debug = f"[DEBUG] Predicted {sandhangan_map[pred_idx.item()]} with confidence {conf.item():.2f}"
     return sandhangan_map[pred_idx]
 
 def pasanganPredict(images):
@@ -110,8 +107,6 @@ def pasanganPredict(images):
         outputs = pasangan_model(tensor)
         probs = torch.nn.functional.softmax(outputs, dim=1)
         conf, pred_idx = torch.max(probs, dim=1)
-        print(f"[DEBUG] Predicted {pasangan_map[pred_idx.item()]} with confidence {conf.item():.2f}")
-        pasangan_debug = f"[DEBUG] Predicted {pasangan_map[pred_idx.item()]} with confidence {conf.item():.2f}"
         pred_idx = torch.argmax(outputs, dim=1).item()
     return pasangan_map[pred_idx]
 
@@ -125,7 +120,7 @@ def baseDebug(images):
         outputs = base_model(tensor)
         probs = torch.nn.functional.softmax(outputs, dim=1)
         conf, pred_idx = torch.max(probs, dim=1)
-        base_debug = f"[DEBUG] Predicted {label_map[pred_idx.item()]} with confidence {conf.item():.2f}"
+        base_debug = f"[BASE] Predicted {label_map[pred_idx.item()]} with confidence {conf.item():.2f}"
     return base_debug
 
 def sandhanganDebug(images):
@@ -136,8 +131,8 @@ def sandhanganDebug(images):
         outputs = sandhangan_model(tensor)
         probs = torch.nn.functional.softmax(outputs, dim=1)
         conf, pred_idx = torch.max(probs, dim=1)
-        sandhangan_debug = f"[DEBUG] Predicted {sandhangan_map[pred_idx.item()]} with confidence {conf.item():.2f}"
-    return sandhangan_debug
+        sandhangan_debug = f"[SANDHANG] Predicted {sandhangan_map[pred_idx.item()]} with confidence {conf.item():.2f}"
+        return sandhangan_debug
 
 def pasanganDebug(images):
     if images.mode != 'RGB':
@@ -147,8 +142,8 @@ def pasanganDebug(images):
         outputs = pasangan_model(tensor)
         probs = torch.nn.functional.softmax(outputs, dim=1)
         conf, pred_idx = torch.max(probs, dim=1)
-        pasangan_debug = f"[DEBUG] Predicted {pasangan_map[pred_idx.item()]} with confidence {conf.item():.2f}"
-    return pasangan_debug
+        pasangan_debug = f"[PASANG] Predicted {pasangan_map[pred_idx.item()]} with confidence {conf.item():.2f}"
+        return pasangan_debug
 
 # === DEFINING BASE, SANDHANGAN, AND PASANGAN ===
 # Theres role mismatch here i have no idea why but it works
@@ -273,6 +268,6 @@ def integrate_pasangan(base_stream, pasangan_stream):
 # == TEST AND DEBUG PURPOSES==
 if __name__ == "__main__":
     openIMG = Image.open("TESTS/test_4.png")
-    result = group_sandhangan(openIMG)
-    for r in result:
-        print(r)
+    basePredict(openIMG)
+    result = baseDebug(openIMG)
+    print(result)
