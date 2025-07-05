@@ -2,11 +2,23 @@ import onnxruntime as ort
 import numpy as np
 from PIL import Image
 import cv2
+import os
 
-# === LOAD MODELS ===
-base_session = ort.InferenceSession("ONNX_MODELS/aksaraUpdate.onnx")
-sandhangan_session = ort.InferenceSession("ONNX_MODELS/sandhangan.onnx")
-pasangan_session = ort.InferenceSession("ONNX_MODELS/pasangan.onnx")
+# === THREAD COUNT LIMIT ===
+os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = "1"
+os.environ["NUMEXPR_NUM_THREADS"] = "1"
+os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
+os.environ["ONNX_NUM_THREADS"] = "1"
+
+
+# === LOAD MODELS & LIMIT TO CPU ONLY ===
+base_session = ort.InferenceSession("ONNX_MODELS/aksaraUpdate.onnx", providers=["CPUExecutionProvider"])
+sandhangan_session = ort.InferenceSession("ONNX_MODELS/sandhangan.onnx", providers=["CPUExecutionProvider"])
+pasangan_session = ort.InferenceSession("ONNX_MODELS/pasangan.onnx", providers=["CPUExecutionProvider"])
+
+
 
 # === PREPROCESSING ===
 def preprocess_image(image):

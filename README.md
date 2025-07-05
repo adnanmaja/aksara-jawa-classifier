@@ -9,7 +9,7 @@ This project aims to preserve and promote the Javanese script by enabling machin
 - **Angka**
 
 > 🧪 Currently in beta — more features and improvements are on the way!
-Still very barebone, updates coming soon
+
 ---
 
 ## 📦 Features

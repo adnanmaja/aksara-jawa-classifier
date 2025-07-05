@@ -7,6 +7,14 @@ from aksara_parser import basePredict, sandhanganPredict, pasanganPredict
 from aksara_parser import classify_region, group_sandhangan, join_base_and_sandhangan, transliterate_grouped, integrate_pasangan
 from aksara_parser import baseDebug, sandhanganDebug, pasanganDebug
 import numpy as np
+import os
+
+os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = "1"
+os.environ["NUMEXPR_NUM_THREADS"] = "1"
+os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
+os.environ["ONNX_NUM_THREADS"] = "1"
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -108,5 +116,6 @@ def too_large(e):
     return jsonify({'error': 'File too large'}), 413
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run()
+    # app.run(debug=True, host='0.0.0.0', port=5000)
     
