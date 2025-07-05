@@ -1,11 +1,7 @@
 import torch
-import numpy as np
 from torchvision import transforms
-from segment_characters import segment_characters
 from PIL import Image
-import cv2
 from torchvision.models import resnet18
-import torchvision.models as models
 import torch.nn as nn
 
 # === LOAD MODELS ===

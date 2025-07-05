@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 from PIL import Image
-from scipy.signal import find_peaks
 
 def pad_and_resize(img, size=224, pad_color=255, padding=100):
     if isinstance(img, Image.Image):

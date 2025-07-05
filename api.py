@@ -1,16 +1,11 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from werkzeug.utils import secure_filename
 from PIL import Image
-import torch
 import io
-import torch.nn as nn
-from torchvision.models import resnet18
-from segment_characters import segment_characters, segment_by_projection
+from segment_characters import segment_by_projection
 from aksara_parser import basePredict, sandhanganPredict, pasanganPredict
 from aksara_parser import classify_region, group_sandhangan, join_base_and_sandhangan, transliterate_grouped, integrate_pasangan
 from aksara_parser import baseDebug, sandhanganDebug, pasanganDebug
-from torchvision import transforms
 import numpy as np
 
 app = Flask(__name__)
