@@ -3,6 +3,8 @@ import numpy as np
 from PIL import Image
 import cv2
 import os
+import threading
+
 
 # === THREAD COUNT LIMIT ===
 os.environ["OMP_NUM_THREADS"] = "1"
@@ -280,3 +282,4 @@ if __name__ == "__main__":
     basePredict(openIMG)
     result = baseDebug(openIMG)
     print(result)
+    print("Active threads:", threading.active_count())
