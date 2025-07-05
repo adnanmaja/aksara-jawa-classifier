@@ -1,35 +1,30 @@
-import torch
-from torchvision import transforms
+import onnxruntime as ort
+import numpy as np
 from PIL import Image
-from torchvision.models import resnet18
-import torch.nn as nn
+import cv2
 
 # === LOAD MODELS ===
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-base_model = resnet18(weights=False)
-base_model.fc = nn.Linear(base_model.fc.in_features, 40)
-base_model.load_state_dict(torch.load("SAVED_MODELS/aksaraUpdate_model.pth", map_location="cpu"))
-base_model.to(device)
-base_model.eval()
+base_session = ort.InferenceSession("ONNX_MODELS/aksaraUpdate.onnx")
+sandhangan_session = ort.InferenceSession("ONNX_MODELS/sandhangan.onnx")
+pasangan_session = ort.InferenceSession("ONNX_MODELS/pasangan.onnx")
 
-sandhangan_model = resnet18(weights=False)
-sandhangan_model.fc = nn.Linear(sandhangan_model.fc.in_features, 20)
-sandhangan_model.load_state_dict(torch.load("SAVED_MODELS/sandhangan_model.pth", map_location="cpu"))
-sandhangan_model.to(device)
-sandhangan_model.eval()
-
-pasangan_model = resnet18(weights=False)
-pasangan_model.fc = nn.Linear(pasangan_model.fc.in_features, 20)
-pasangan_model.load_state_dict(torch.load("SAVED_MODELS/pasangan_model.pth", map_location="cpu"))
-pasangan_model.to(device)
-pasangan_model.eval()
-
-
-transform = transforms.Compose([
-    transforms.ToTensor(),
-    transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                         std=[0.229, 0.224, 0.225])
-])
+# === PREPROCESSING ===
+def preprocess_image(image):
+    if image.mode != 'RGB':
+        image = image.convert('RGB')
+    
+    image = image.resize((224, 224))
+    
+    img_array = np.array(image).astype(np.float32) / 255.0
+    
+    mean = np.array([0.485, 0.456, 0.406])
+    std = np.array([0.229, 0.224, 0.225])
+    img_array = (img_array - mean) / std
+    
+    img_array = np.transpose(img_array, (2, 0, 1))
+    img_array = np.expand_dims(img_array, axis=0).astype(np.float32)
+    
+    return img_array
 
 # === LABELS MAPPING ===
 label_map = [
@@ -69,77 +64,83 @@ pasangan_map = [
 
 
 # === PREDICTION LOGICS ===
-def basePredict(images):
-    base_results = []
-    if images.mode != 'RGB':
-        images = images.convert('RGB')
-    tensor = transform(images).unsqueeze(0).to(device)
-    with torch.no_grad():
-        outputs = base_model(tensor)
-        probs = torch.nn.functional.softmax(outputs, dim=1)
-        conf, pred_idx = torch.max(probs, dim=1)
-        print(f"[BASE] Predicted {label_map[pred_idx.item()]} with confidence {conf.item():.2f}")
-        pred_idx = torch.argmax(outputs, dim=1).item()
-        base_results.append(label_map[pred_idx])
+def basePredict(image):
+    input_data = preprocess_image(image)
+    
+    # Run inference
+    outputs = base_session.run(None, {"input": input_data})
+    logits = outputs[0]
+    
+    # Apply softmax and get prediction
+    probs = np.exp(logits) / np.sum(np.exp(logits), axis=1, keepdims=True)
+    pred_idx = np.argmax(probs)
+    confidence = probs[0][pred_idx]
+    
+    print(f"[BASE] Predicted {label_map[pred_idx]} with confidence {confidence:.2f}")
     return label_map[pred_idx]
 
-def sandhanganPredict(images):
-    sandhangan_results = []
-    if images.mode != 'RGB':
-        images = images.convert('RGB')
-    tensor = transform(images).unsqueeze(0).to(device)
-    with torch.no_grad():
-        outputs = sandhangan_model(tensor)
-        probs = torch.nn.functional.softmax(outputs, dim=1)
-        conf, pred_idx = torch.max(probs, dim=1)
+def sandhanganPredict(image):
+    input_data = preprocess_image(image)
+    
+    # Run inference
+    outputs = sandhangan_session.run(None, {"input": input_data})
+    logits = outputs[0]
+    
+    # Apply softmax and get prediction
+    probs = np.exp(logits) / np.sum(np.exp(logits), axis=1, keepdims=True)
+    pred_idx = np.argmax(probs)
+    confidence = probs[0][pred_idx]
+    
     return sandhangan_map[pred_idx]
 
-def pasanganPredict(images):
-    pasangan_results = []
-    if images.mode != 'RGB':
-        images = images.convert('RGB')
-    tensor = transform(images).unsqueeze(0).to(device)
-    with torch.no_grad():
-        outputs = pasangan_model(tensor)
-        probs = torch.nn.functional.softmax(outputs, dim=1)
-        conf, pred_idx = torch.max(probs, dim=1)
-        pred_idx = torch.argmax(outputs, dim=1).item()
+def pasanganPredict(image):
+    input_data = preprocess_image(image)
+    
+    # Run inference
+    outputs = pasangan_session.run(None, {"input": input_data})
+    logits = outputs[0]
+    
+    # Apply softmax and get prediction
+    probs = np.exp(logits) / np.sum(np.exp(logits), axis=1, keepdims=True)
+    pred_idx = np.argmax(probs)
+    confidence = probs[0][pred_idx]
+    
     return pasangan_map[pred_idx]
 
 
 # === DEBUG MESSAGES (looks cool) ===
-def baseDebug(images):
-    if images.mode != 'RGB':
-        images = images.convert('RGB')
-    tensor = transform(images).unsqueeze(0).to(device)
-    with torch.no_grad():
-        outputs = base_model(tensor)
-        probs = torch.nn.functional.softmax(outputs, dim=1)
-        conf, pred_idx = torch.max(probs, dim=1)
-        base_debug = f"[BASE] Predicted {label_map[pred_idx.item()]} with confidence {conf.item():.2f}"
-    return base_debug
+def baseDebug(image):
+    input_data = preprocess_image(image)
+    outputs = base_session.run(None, {"input": input_data})
+    logits = outputs[0]
+    
+    probs = np.exp(logits) / np.sum(np.exp(logits), axis=1, keepdims=True)
+    pred_idx = np.argmax(probs)
+    confidence = probs[0][pred_idx]
+    
+    return f"[BASE] Predicted {label_map[pred_idx]} with confidence {confidence:.2f}"
 
-def sandhanganDebug(images):
-    if images.mode != 'RGB':
-        images = images.convert('RGB')
-    tensor = transform(images).unsqueeze(0).to(device)
-    with torch.no_grad():
-        outputs = sandhangan_model(tensor)
-        probs = torch.nn.functional.softmax(outputs, dim=1)
-        conf, pred_idx = torch.max(probs, dim=1)
-        sandhangan_debug = f"[SANDHANG] Predicted {sandhangan_map[pred_idx.item()]} with confidence {conf.item():.2f}"
-        return sandhangan_debug
+def sandhanganDebug(image):
+    input_data = preprocess_image(image)
+    outputs = sandhangan_session.run(None, {"input": input_data})
+    logits = outputs[0]
+    
+    probs = np.exp(logits) / np.sum(np.exp(logits), axis=1, keepdims=True)
+    pred_idx = np.argmax(probs)
+    confidence = probs[0][pred_idx]
+    
+    return f"[SANDHANG] Predicted {sandhangan_map[pred_idx]} with confidence {confidence:.2f}"
 
-def pasanganDebug(images):
-    if images.mode != 'RGB':
-        images = images.convert('RGB')
-    tensor = transform(images).unsqueeze(0).to(device)
-    with torch.no_grad():
-        outputs = pasangan_model(tensor)
-        probs = torch.nn.functional.softmax(outputs, dim=1)
-        conf, pred_idx = torch.max(probs, dim=1)
-        pasangan_debug = f"[PASANG] Predicted {pasangan_map[pred_idx.item()]} with confidence {conf.item():.2f}"
-        return pasangan_debug
+def pasanganDebug(image):
+    input_data = preprocess_image(image)
+    outputs = pasangan_session.run(None, {"input": input_data})
+    logits = outputs[0]
+    
+    probs = np.exp(logits) / np.sum(np.exp(logits), axis=1, keepdims=True)
+    pred_idx = np.argmax(probs)
+    confidence = probs[0][pred_idx]
+    
+    return f"[PASANG] Predicted {pasangan_map[pred_idx]} with confidence {confidence:.2f}"
 
 # === DEFINING BASE, SANDHANGAN, AND PASANGAN ===
 # Theres role mismatch here i have no idea why but it works
