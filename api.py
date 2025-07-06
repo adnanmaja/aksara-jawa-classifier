@@ -8,6 +8,8 @@ from aksara_parser import classify_region, group_sandhangan, join_base_and_sandh
 from aksara_parser import baseDebug, sandhanganDebug, pasanganDebug
 import numpy as np
 import os
+import psutil
+from mangum import Mangum
 
 os.environ["OMP_NUM_THREADS"] = "1"
 os.environ["OPENBLAS_NUM_THREADS"] = "1"
@@ -111,11 +113,22 @@ def predict():
 def health_check():
     return jsonify({'status': 'healthy'}), 200
 
+@app.route("/mem")
+def mem():
+    mem = psutil.virtual_memory()
+    return {
+        "total": mem.total,
+        "used": mem.used,
+        "percent": mem.percent
+    }
+
 @app.errorhandler(413)
 def too_large(e):
     return jsonify({'error': 'File too large'}), 413
 
+lambda_handler = Mangum(app)
+
 if __name__ == "__main__":
-    app.run()
-    # app.run(debug=True, host='0.0.0.0', port=5000)
+    # app.run()
+    app.run(debug=True, host='0.0.0.0', port=5000)
     

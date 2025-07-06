@@ -1,0 +1,10 @@
+__pycache__/
+fonts/
+DATA/
+SAVED_MODELS/
+TESTS/
+TRAININGS_AND_TOOLS/
+static/
+templates/
+*.onnx
+*.pth

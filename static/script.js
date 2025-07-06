@@ -154,7 +154,7 @@
             formData.append('file', imageFile);
             
             try {
-                const response = await fetch('http://192.168.1.7:5000/predict', { 
+                const response = await fetch('https://nulisjawa.my.id/', { 
                     method: 'POST',
                     body: formData
                 });

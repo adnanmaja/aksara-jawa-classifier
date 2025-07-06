@@ -15,12 +15,6 @@ os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
 os.environ["ONNX_NUM_THREADS"] = "1"
 
 
-# === LOAD MODELS & LIMIT TO CPU ONLY ===
-base_session = ort.InferenceSession("ONNX_MODELS/aksaraUpdate.onnx", providers=["CPUExecutionProvider"])
-sandhangan_session = ort.InferenceSession("ONNX_MODELS/sandhangan.onnx", providers=["CPUExecutionProvider"])
-pasangan_session = ort.InferenceSession("ONNX_MODELS/pasangan.onnx", providers=["CPUExecutionProvider"])
-
-
 
 # === PREPROCESSING ===
 def preprocess_image(image):
@@ -77,8 +71,9 @@ pasangan_map = [
 ]
 
 
-# === PREDICTION LOGICS ===
+# === LOAD MODELS & PREDICTION LOGICS ===
 def basePredict(image):
+    base_session = ort.InferenceSession("ONNX_MODELS/aksaraUpdate.onnx", providers=["CPUExecutionProvider"])
     input_data = preprocess_image(image)
     
     # Run inference
@@ -94,6 +89,7 @@ def basePredict(image):
     return label_map[pred_idx]
 
 def sandhanganPredict(image):
+    sandhangan_session = ort.InferenceSession("ONNX_MODELS/sandhangan.onnx", providers=["CPUExecutionProvider"])
     input_data = preprocess_image(image)
     
     # Run inference
@@ -108,6 +104,7 @@ def sandhanganPredict(image):
     return sandhangan_map[pred_idx]
 
 def pasanganPredict(image):
+    pasangan_session = ort.InferenceSession("ONNX_MODELS/pasangan.onnx", providers=["CPUExecutionProvider"])
     input_data = preprocess_image(image)
     
     # Run inference
@@ -124,6 +121,7 @@ def pasanganPredict(image):
 
 # === DEBUG MESSAGES (looks cool) ===
 def baseDebug(image):
+    base_session = ort.InferenceSession("ONNX_MODELS/aksaraUpdate.onnx", providers=["CPUExecutionProvider"])
     input_data = preprocess_image(image)
     outputs = base_session.run(None, {"input": input_data})
     logits = outputs[0]
@@ -135,6 +133,7 @@ def baseDebug(image):
     return f"[BASE] Predicted {label_map[pred_idx]} with confidence {confidence:.2f}"
 
 def sandhanganDebug(image):
+    sandhangan_session = ort.InferenceSession("ONNX_MODELS/sandhangan.onnx", providers=["CPUExecutionProvider"])
     input_data = preprocess_image(image)
     outputs = sandhangan_session.run(None, {"input": input_data})
     logits = outputs[0]
@@ -146,6 +145,7 @@ def sandhanganDebug(image):
     return f"[SANDHANG] Predicted {sandhangan_map[pred_idx]} with confidence {confidence:.2f}"
 
 def pasanganDebug(image):
+    pasangan_session = ort.InferenceSession("ONNX_MODELS/pasangan.onnx", providers=["CPUExecutionProvider"])
     input_data = preprocess_image(image)
     outputs = pasangan_session.run(None, {"input": input_data})
     logits = outputs[0]
