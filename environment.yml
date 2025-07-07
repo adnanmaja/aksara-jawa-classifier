@@ -178,7 +178,12 @@ dependencies:
   - zlib=1.2.13=h8cc25b3_1
   - zstd=1.5.6=h8880b57_0
   - pip:
+      - boto3==1.39.3
+      - botocore==1.39.3
       - gunicorn==23.0.0
+      - jmespath==1.0.1
+      - mangum==0.19.0
+      - s3transfer==0.13.0
       - split-folders==0.5.1
       - torchvision==0.20.1
 prefix: D:\Anaconda\envs\aksara

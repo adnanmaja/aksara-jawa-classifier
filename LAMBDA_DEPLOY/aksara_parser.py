@@ -1,7 +1,9 @@
 import onnxruntime as ort
 import numpy as np
+from PIL import Image
 import os
-import boto3
+import threading
+
 
 # === THREAD COUNT LIMIT ===
 os.environ["OMP_NUM_THREADS"] = "1"
@@ -11,11 +13,7 @@ os.environ["NUMEXPR_NUM_THREADS"] = "1"
 os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
 os.environ["ONNX_NUM_THREADS"] = "1"
 
-# === DOWNLOAD MODELS FROM S3 ===
-def get_model_from_s3(s3_key, local_path):
-    if not os.path.exists(local_path):
-        s3 = boto3.client("s3")
-        s3.download_file("aksara-models", s3_key, local_path)
+
 
 # === PREPROCESSING ===
 def preprocess_image(image):
@@ -72,18 +70,9 @@ pasangan_map = [
 ]
 
 
-# === CACHE & LOAD MODELS, PREDICTION LOGICS ===
-base_session = None
-sandhangan_session = None
-pasangan_session = None
-
+# === LOAD MODELS & PREDICTION LOGICS ===
 def basePredict(image):
-    global base_session
-    if base_session is None:
-        model_path = "/tmp/aksaraUpdate.onnx"
-        get_model_from_s3("ONNX_MODELS/aksaraUpdate.onnx", model_path)
-        base_session = ort.InferenceSession(model_path, providers=["CPUExecutionProvider"])
-
+    base_session = ort.InferenceSession("ONNX_MODELS/aksaraUpdate.onnx", providers=["CPUExecutionProvider"])
     input_data = preprocess_image(image)
     
     # Run inference
@@ -99,12 +88,7 @@ def basePredict(image):
     return label_map[pred_idx]
 
 def sandhanganPredict(image):
-    global sandhangan_session
-    if sandhangan_session is None:
-        model_path = "/tmp/sandhangan.onnx"
-        get_model_from_s3("ONNX_MODELS/sandhangan.onnx", model_path)
-        sandhangan_session = ort.InferenceSession(model_path, providers=["CPUExecutionProvider"])
-
+    sandhangan_session = ort.InferenceSession("ONNX_MODELS/sandhangan.onnx", providers=["CPUExecutionProvider"])
     input_data = preprocess_image(image)
     
     # Run inference
@@ -119,12 +103,7 @@ def sandhanganPredict(image):
     return sandhangan_map[pred_idx]
 
 def pasanganPredict(image):
-    global pasangan_session
-    if pasangan_session is None:
-        model_path = "/tmp/pasangan.onnx"
-        get_model_from_s3("ONNX_MODELS/pasangan.onnx", model_path)
-        pasangan_session = ort.InferenceSession(model_path, providers=["CPUExecutionProvider"])
-
+    pasangan_session = ort.InferenceSession("ONNX_MODELS/pasangan.onnx", providers=["CPUExecutionProvider"])
     input_data = preprocess_image(image)
     
     # Run inference
@@ -141,12 +120,7 @@ def pasanganPredict(image):
 
 # === DEBUG MESSAGES (looks cool) ===
 def baseDebug(image):
-    global base_session
-    if base_session is None:
-        model_path = "/tmp/aksaraUpdate.onnx"
-        get_model_from_s3("ONNX_MODELS/aksaraUpdate.onnx", model_path)
-        base_session = ort.InferenceSession(model_path, providers=["CPUExecutionProvider"])
-
+    base_session = ort.InferenceSession("ONNX_MODELS/aksaraUpdate.onnx", providers=["CPUExecutionProvider"])
     input_data = preprocess_image(image)
     outputs = base_session.run(None, {"input": input_data})
     logits = outputs[0]
@@ -158,12 +132,7 @@ def baseDebug(image):
     return f"[BASE] Predicted {label_map[pred_idx]} with confidence {confidence:.2f}"
 
 def sandhanganDebug(image):
-    global sandhangan_session
-    if sandhangan_session is None:
-        model_path = "/tmp/sandhangan.onnx"
-        get_model_from_s3("ONNX_MODELS/sandhangan.onnx", model_path)
-        sandhangan_session = ort.InferenceSession(model_path, providers=["CPUExecutionProvider"])
-
+    sandhangan_session = ort.InferenceSession("ONNX_MODELS/sandhangan.onnx", providers=["CPUExecutionProvider"])
     input_data = preprocess_image(image)
     outputs = sandhangan_session.run(None, {"input": input_data})
     logits = outputs[0]
@@ -175,12 +144,7 @@ def sandhanganDebug(image):
     return f"[SANDHANG] Predicted {sandhangan_map[pred_idx]} with confidence {confidence:.2f}"
 
 def pasanganDebug(image):
-    global pasangan_session
-    if pasangan_session is None:
-        model_path = "/tmp/pasangan.onnx"
-        get_model_from_s3("ONNX_MODELS/pasangan.onnx", model_path)
-        pasangan_session = ort.InferenceSession(model_path, providers=["CPUExecutionProvider"])
-
+    pasangan_session = ort.InferenceSession("ONNX_MODELS/pasangan.onnx", providers=["CPUExecutionProvider"])
     input_data = preprocess_image(image)
     outputs = pasangan_session.run(None, {"input": input_data})
     logits = outputs[0]
@@ -312,9 +276,9 @@ def integrate_pasangan(base_stream, pasangan_stream):
 
 
 # == TEST AND DEBUG PURPOSES==
-# if __name__ == "__main__":
-#     openIMG = Image.open("TESTS/test_4.png")
-#     basePredict(openIMG)
-#     result = baseDebug(openIMG)
-#     print(result)
-#     print("Active threads:", threading.active_count())
+if __name__ == "__main__":
+    openIMG = Image.open("TESTS/test_4.png")
+    basePredict(openIMG)
+    result = baseDebug(openIMG)
+    print(result)
+    print("Active threads:", threading.active_count())

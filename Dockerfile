@@ -1,14 +1,14 @@
-# Use the official AWS Lambda Python 3.12 base image
-FROM public.ecr.aws/lambda/python:3.12
+FROM public.ecr.aws/lambda/python:3.11
 
-# Copy requirements file
-COPY requirements.txt ${LAMBDA_TASK_ROOT}
+RUN yum install -y libjpeg-turbo-devel zlib-devel && yum clean all
 
-# Install Python dependencies
+WORKDIR /var/task
+
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy function code
-COPY . ${LAMBDA_TASK_ROOT}
+COPY api.py .
+COPY aksara_parser.py .
+COPY segment_characetrs.py .
 
-# Set the CMD to your handler (change "app.lambda_handler" to match your function)
 CMD ["api.lambda_handler"]

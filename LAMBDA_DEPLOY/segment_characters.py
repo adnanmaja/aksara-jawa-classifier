@@ -2,7 +2,6 @@ import cv2
 import numpy as np
 from PIL import Image
 
-# === PADDING AND RESIZE TO MATCH TRAINING DATA N IMPROVING ACCURACY===
 def pad_and_resize(img, size=224, pad_color=255, padding=100):
     if isinstance(img, Image.Image):
         img = np.array(img.convert("L"))
@@ -21,7 +20,6 @@ def pad_and_resize(img, size=224, pad_color=255, padding=100):
 
     return Image.fromarray(canvas).convert("RGB")
 
-# === PROJECTION SEGMENTATION ===
 def split_vertically_or_horizontally_if_needed(gray_char_img, aspect_thresh=2.0):
         h, w = gray_char_img.shape
 
@@ -49,11 +47,12 @@ def split_vertically_or_horizontally_if_needed(gray_char_img, aspect_thresh=2.0)
 
         return [gray_char_img]
 
-# === SEGMENTATION, SEPARATING EACH CHARACTERS ===
 def segment_characters(pil_image, min_width=10, min_height=10):
     import numpy as np
     import cv2
     from PIL import Image
+
+    
 
     # Convert to grayscale
     if isinstance(pil_image, str):
@@ -139,14 +138,14 @@ def segment_by_projection(pil_image, min_char_width=5, min_char_height=5):
 
 
 
-# if __name__ == "__main__":
-#     import os
-#     image = Image.open("./TESTS/test_4.png")
-#     segments = segment_by_projection(image) 
-#     output_dir = "./DATA/segmented_chars"
-#     os.makedirs(output_dir, exist_ok=True)
+if __name__ == "__main__":
+    import os
+    image = Image.open("./TESTS/test_4.png")
+    segments = segment_by_projection(image) 
+    output_dir = "./DATA/segmented_chars"
+    os.makedirs(output_dir, exist_ok=True)
 
-#     for i, seg in enumerate(segments):
-#         img = seg["image"]
-#         x, y, w, h = seg["bbox"]
-#         img.save(os.path.join(output_dir, f"char_{i}_x{x}_y{y}.png"))
+    for i, seg in enumerate(segments):
+        img = seg["image"]
+        x, y, w, h = seg["bbox"]
+        img.save(os.path.join(output_dir, f"char_{i}_x{x}_y{y}.png"))
