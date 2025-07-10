@@ -8,7 +8,6 @@ from aksara_parser import classify_region, group_sandhangan, join_base_and_sandh
 from aksara_parser import baseDebug, sandhanganDebug, pasanganDebug
 import numpy as np
 import os
-from serverless_wsgi import handle_request
 
 os.environ["OMP_NUM_THREADS"] = "1"
 os.environ["OPENBLAS_NUM_THREADS"] = "1"
@@ -117,8 +116,6 @@ def health_check():
 def too_large(e):
     return jsonify({'error': 'File too large'}), 413
 
-def lambda_handler(event, context):
-    return handle_request(app, event, context)
 
 if __name__ == "__main__":
     # app.run()
