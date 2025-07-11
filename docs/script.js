@@ -154,7 +154,7 @@
             formData.append('file', imageFile);
             
             try {
-                const response = await fetch('https://nulisjawa.my.id/', { 
+                const response = await fetch('https://aksara-container.delightfulcliff-10a792b4.southeastasia.azurecontainerapps.io/', { 
                     method: 'POST',
                     body: formData
                 });
