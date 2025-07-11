@@ -3,11 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Aksara Jawa Scanner, a deep learning project that classifies handwritten Javanese script using rResNet18.">
+    <meta name="description" content="Aksara Jawa Scanner, projek deep learning untuk mengenali aksara jawa menggunakan ResNet18.">
+    <meta name="keywords" content="Aksara Jawa, Scanner aksara jawa, Javanese script, OCR, handwriting recognition, AI, deep learning, ResNet18, traditional script, machine learning">
+    <meta name="author" content="Rafa Atmaja">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="Indonesia">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://nulisjawa.my.id/">
+    <meta property="og:title" content="Aksara Jawa Scanner">
+    <meta property="og:description" content="Alat gratis untuk mengenali aksara Jawa tulisan tangan menggunakan deep learning. Unggah gambar Aksara Jawa Anda untuk pengenalan dan transliterasi.">
+    <meta property="og:site_name" content="Aksara Jawa Scanner">
+    <meta property="og:locale" content="id_ID">
+    <meta property="og:locale:alternate" content="en_US">
     <title>Aksara Jawa Scanner</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="icon" type="image/png" href="icon2.png">
     
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Aksara Jawa Scanner",
+        "description": "AI-powered Javanese script recognition tool using deep learning ResNet18 for handwritten character analysis",
+        "url": "https://nulisjawa.my.id",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Web Browser",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "author": {
+            "@type": "Person",
+            "name": "Rafa Atmaja",
+            "url": "https://www.linkedin.com/in/rafa-adnan-0329b4321"
+        },
+        "creator": {
+            "@type": "Person",
+            "name": "Rafa Atmaja"
+        },
+        "datePublished": "2025-07-11",
+        "dateModified": "2025-07-11",
+        "inLanguage": ["id", "en"],
+        "keywords": "Aksara Jawa Scanner, projek deep learning untuk mengenali aksara jawa menggunakan ResNet18.",
+    }
+    </script>
+
     <style>
         * {
             margin: 0;
@@ -156,6 +197,28 @@
         .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .seo-content {
+            max-width: 800px;
+            margin: 0 auto 40px;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .seo-content h2 {
+            color: #4a5568;
+            margin-bottom: 20px;
+            font-size: clamp(1.5rem, 4vw, 2rem);
+        }
+
+        .seo-content p {
+            color: #718096;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: clamp(1rem, 3vw, 1.1rem);
         }
 
         .preview-section {
@@ -441,7 +504,6 @@
             font-size: clamp(0.8rem, 3vw, 0.9rem);
         }
 
-        /* Button container for better mobile layout */
         .button-container {
             display: flex;
             flex-wrap: wrap;
@@ -451,7 +513,6 @@
             margin-top: 20px;
         }
 
-        /* Mobile-specific adjustments */
         @media (max-width: 768px) {
             body {
                 padding: 5px;
@@ -576,6 +637,18 @@
             </button>
         </div>
 
+        <section class="seo-content">
+            <h2 id="seoHeader">About aksara jawa scanner</h2>
+            <p id="seoParagraph1">
+                Aksara Jawa Scanner is an AI-powered tool specifically built to recognize and analyze handwritten Javanese script (Aksara Jawa).
+                Using deep learning technology with a ResNet18 architecture, the system can accurately identify traditional Javanese characters and provide their transliteration.
+            </p>
+            <p id="seoParagraph2">
+                Currently in beta version. More features and improvements are coming soon!
+                Check out my GitHub or social media below for feedback and contributions!
+            </p>
+        </section>
+
         <div class="preview-section" id="previewSection">
             <img id="imagePreview" class="image-preview" alt="Uploaded image preview">
             <div class="button-container">
@@ -587,6 +660,7 @@
         <div class="processing" id="processingSection" style="display: none;">
             <div class="spinner"></div>
             <p id="processingText">Processing your Javanese script...</p>
+            <p id="processingParagraph">Please be patient, startup process may take 30 seconds</p>
         </div>
 
         <div class="results-section" id="resultsSection">

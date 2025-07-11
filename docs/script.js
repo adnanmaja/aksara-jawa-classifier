@@ -12,12 +12,16 @@
                 debugBtn: "Debug",
                 hideDebugBtn: "Hide Debug",
                 processingText: "Processing your Javanese script...",
+                processingPararagph: "Please be patient, startup process may take 30 seconds",
                 resultsTitle: "Recognition Results",
                 debugTitle: "Debug Results",
                 footerText1: "Free for personal and commercial use",
                 footerText2: "This project was made as part of my OCR learning, feedback is absolutely welcomed",
                 errorMessage: "Failed to process image. Please try again.",
-                noDebugData: "No debug data available"
+                noDebugData: "No debug data available",
+                seoHeader: "About aksara jawa scanner",
+                seoParagraph1: "Aksara Jawa Scanner is an AI-powered tool specifically built to recognize and analyze handwritten Javanese script (Aksara Jawa). Using deep learning technology with a ResNet18 architecture, the system can accurately identify traditional Javanese characters and provide their transliteration.",
+                seoParagraph2: "Currently in beta version. More features and improvements are coming soon! Check out my GitHub or social media below for feedback and contributions!"
             },
             id: {
                 mainTitle: "Scanner Aksara Jawa",
@@ -31,12 +35,16 @@
                 debugBtn: "Debug",
                 hideDebugBtn: "Sembunyikan Debug",
                 processingText: "Memproses Aksara Jawa Anda...",
+                processingParagraph: "Mohon bersabar, proses startup dapat membutuhkan waktu 30 detik",
                 resultsTitle: "Hasil Pengenalan",
                 debugTitle: "Hasil Debug",
                 footerText1: "Free for personal and commercial use",
                 footerText2: "This project was made as part of my OCR learning, feedback is absolutely welcomed",
                 errorMessage: "Gagal memproses gambar. Silakan coba lagi.",
-                noDebugData: "Tidak ada data debug yang tersedia"
+                noDebugData: "Tidak ada data debug yang tersedia",
+                seoHeader: "Tentang scanner aksara jawa",
+                seoParagraph1: "Aksara Jawa Scanner adalah alat berbasis AI yang dibuat khusus untuk mengenali dan menganalisis tulisan tangan Aksara Jawa. Menggunakan teknologi deep learning dengan arsitektur ResNet18, sistem ini dapat mengenali karakter-karakter tradisional Aksara Jawa dengan akurat dan memberikan transliterasinya.",
+                seoParagraph2: "Saat ini masih dalam versi beta, fitur dan peningkatan lainnya akan segera hadir! Kunjungi GitHub atau media sosialku di bawah untuk masukan dan kontribusi!"
             }
         };
 
@@ -61,10 +69,15 @@
             document.getElementById('debugBtn').textContent = t.debugBtn;
             document.getElementById('hideDebugBtn').textContent = t.hideDebugBtn;
             document.getElementById('processingText').textContent = t.processingText;
+            document.getElementById('processingParagraph').textContent = t.processingParagraph;
             document.getElementById('resultsTitle').textContent = t.resultsTitle;
             document.getElementById('debugTitle').textContent = t.debugTitle;
             document.getElementById('footerText1').textContent = t.footerText1;
             document.getElementById('footerText2').textContent = t.footerText2;
+            document.getElementById('seoHeader').textContent = t.seoHeader;
+            document.getElementById('seoParagraph1').textContent = t.seoParagraph1;
+            document.getElementById('seoParagraph2').textContent = t.seoParagraph2;
+            
             
             // Update HTML lang attribute
             document.documentElement.lang = lang;
