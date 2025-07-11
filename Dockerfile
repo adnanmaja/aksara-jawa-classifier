@@ -5,11 +5,12 @@ WORKDIR /app
 
 COPY requirements.txt .
 
-# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
+COPY . /app
+COPY ONNX_MODELS/ /app/ONNX_MODELS/
 
-EXPOSE 8000
+EXPOSE 80
 
-CMD ["python", "-m", "flask", "run", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["gunicorn", "--bind", "0.0.0.0:80", "api:app"]

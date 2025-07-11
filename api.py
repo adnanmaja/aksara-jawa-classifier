@@ -7,21 +7,11 @@ from aksara_parser import basePredict, sandhanganPredict, pasanganPredict
 from aksara_parser import classify_region, group_sandhangan, join_base_and_sandhangan, transliterate_grouped, integrate_pasangan
 from aksara_parser import baseDebug, sandhanganDebug, pasanganDebug
 import numpy as np
-import os
-from serverless_wsgi import handle_request
 
-# === RESOURCE LIMITATION ===
-os.environ["OMP_NUM_THREADS"] = "1"
-os.environ["OPENBLAS_NUM_THREADS"] = "1"
-os.environ["MKL_NUM_THREADS"] = "1"
-os.environ["NUMEXPR_NUM_THREADS"] = "1"
-os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
-os.environ["ONNX_NUM_THREADS"] = "1"
 
 app = Flask(__name__)
-CORS(app) 
+CORS(app)  
 
-# === UPLOAD SETTINGS ===
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp'}
 
@@ -29,7 +19,6 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# === POST ENDPOINT ===
 @app.route('/', methods=['POST'])
 def predict():
     try:
@@ -37,6 +26,7 @@ def predict():
         if 'file' not in request.files:
             return jsonify({'error': 'No file provided'}), 400
         
+        print("File received")
         file = request.files['file']
         
         # Check if file is selected
@@ -49,6 +39,7 @@ def predict():
         
         # Read and process the image
         img_bytes = file.read()
+        print(f"Image read, size: {len(img_bytes)} bytes")
         pil_image = Image.open(io.BytesIO(img_bytes)).convert("RGB")
         char_segments = segment_by_projection(pil_image)
 
@@ -59,7 +50,6 @@ def predict():
         for seg in char_segments:  # DEBUG
             print(f"Segment: bbox={seg['bbox']}, h={seg['bbox'][3]}, cy={seg['bbox'][1] + seg['bbox'][3]/2}, role={classify_region(seg['bbox'], avg_h, avg_y)}")
 
-        # Predictions
         base_preds = []
         sandhangan_preds = []
         pasangan_preds = []
@@ -89,7 +79,6 @@ def predict():
                 base_preds.append('_')
                 sandhangan_preds.append('_')
 
-        # Combining prediction results from all 3 models
         print(f"[BEFORE GROUPING AND INTEGRATING] Base: {len(base_preds)}, Sandhangan: {len(sandhangan_preds)}, Pasangan: {len(pasangan_preds)}")
         integrated_result = integrate_pasangan(base_preds, pasangan_preds)
         grouped_result = join_base_and_sandhangan(base_preds, sandhangan_preds)
@@ -98,7 +87,6 @@ def predict():
         print(f"[GROUPED] Type: {type(grouped)}, {grouped}")
         final_text = transliterate_grouped(grouped_result)
 
-        # Output
         return jsonify({
             "debug": {
                 "base": base_debug,
@@ -122,10 +110,7 @@ def health_check():
 def too_large(e):
     return jsonify({'error': 'File too large'}), 413
 
-def lambda_handler(event, context):
-    return handle_request(app, event, context)
 
-# if __name__ == "__main__":
-#     # app.run()
-    # app.run(debug=True, host='0.0.0.0', port=5000)
-    
+if __name__ == "__main__":
+    # app.run()
+    app.run(debug=True, host='0.0.0.0', port=80)   

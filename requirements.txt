@@ -4,5 +4,4 @@ numpy
 pillow
 flask
 flask-cors
-boto3
-serverless-wsgi
+gunicorn

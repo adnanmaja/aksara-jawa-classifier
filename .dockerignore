@@ -6,9 +6,7 @@ TESTS/
 TRAININGS_AND_TOOLS/
 static/
 templates/
-ONNX_MODELS/
 .git/
-*.onnx
 *.pth
 *.png
 *.jpg
