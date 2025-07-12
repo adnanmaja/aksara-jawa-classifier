@@ -9,8 +9,6 @@ This project aims to preserve and promote the Javanese script by enabling machin
 - **Pasangan**
 - **Angka** (Coming soon)
 
----
-
 ## 🚀 Live Demo
 
 Frontend: [https://www.nulisjawa.my.id](https://www.nulisjawa.my.id)  
@@ -51,7 +49,9 @@ This project is my attempt to solve the problem that once frustrated teenage me:
 
 ---
 
-## 🧪 Techinicals
+## 🧪 Technicals
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54) ![PyTorch](https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=for-the-badge&logo=PyTorch&logoColor=white) ![OpenCV](https://img.shields.io/badge/opencv-%23white.svg?style=for-the-badge&logo=opencv&logoColor=white)
+
 ###  Machine Learning Pipeline
 Raw Images → Data Augmentation → Role Mapping → ResNet18 (Fine-tuned) → ONNX Model → Flask API
 
@@ -83,6 +83,8 @@ Raw Images → Data Augmentation → Role Mapping → ResNet18 (Fine-tuned) → 
 ---
 
 ## 📷 Web Interface
+![Azure](https://img.shields.io/badge/azure-%230072C6.svg?style=for-the-badge&logo=microsoftazure&logoColor=white) ![Flask](https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white) ![Gunicorn](https://img.shields.io/badge/gunicorn-%298729.svg?style=for-the-badge&logo=gunicorn&logoColor=white) ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+
 ![](preview1.png)
 
 ---
