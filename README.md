@@ -23,7 +23,9 @@ API: `https://aksara-container.delightfulcliff-10a792b4.southeastasia.azureconta
 
 ## 🧭 Problem Statement
 Back in high school, I lowkey hated Javanese class. One of the biggest reasons? Aksara Jawa. The traditional script felt difficult to learn, and the lack of digital tools made it even more frustrating. I remember searching desperately for an image-to-text translator for Javanese characters - literally none existed.
+
 Years later, I realized this wasn't just my personal struggle. Javanese script (Aksara Jawa) is a traditional writing system used by over 75 million Javanese speakers, yet it faces the risk of digital extinction. The same barriers that made me hate learning it in school - complexity and lack of accessible tools - are preventing an entire generation from connecting with their cultural heritage.
+
 This project is my attempt to solve the problem that once frustrated teenage me: creating the image-to-text Aksara Jawa translator that didn't exist when I needed it most.
 
 ---
@@ -87,7 +89,6 @@ Raw Images → Data Augmentation → Role Mapping → ResNet18 (Fine-tuned) → 
 ## 📗 Code Examples 
 ### Model training pipeline
 <pre>
-```
 # Setting up the model (ResNet18)
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 num_classes = len(train_dataset.classes)
@@ -155,12 +156,10 @@ for epoch in range(num_epochs):
     val_acc = 100 * val_correct / val_total  
     print(f'Epoch {epoch+1}/{num_epochs}, Loss: {total_loss/len(train_loader):.4f}')
     print(f"Validation Accuracy: {val_acc:.2f}%")
-```
 </pre>
 
 ### Image Segmentation
 <pre>
-```
 def segment_by_projection(pil_image, min_char_width=5, min_char_height=5):
     """
     Segment image into character glyphs using projection profiles.
@@ -209,11 +208,9 @@ def segment_by_projection(pil_image, min_char_width=5, min_char_height=5):
                         'bbox': (char_start, y1, w, h)
                     })
     return segments
-```
 </pre>
 ### Prediction logic
 <pre>
-```
 def basePredict(image):
     base_session = ort.InferenceSession("ONNX_MODELS/aksaraUpdate.onnx", providers=["CPUExecutionProvider"])
     input_data = preprocess_image(image)
@@ -229,11 +226,9 @@ def basePredict(image):
     
     print(f"[BASE] Predicted {label_map[pred_idx]} with confidence {confidence:.2f}")
     return label_map[pred_idx]
-```
 </pre>
 ### API Inference
 <pre>
-```
 @app.route('/', methods=['POST'])
 def predict():
     try:
@@ -315,9 +310,7 @@ def predict():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-```
 </pre>
-
 
 ---
 
