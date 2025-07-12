@@ -12,7 +12,7 @@
                 debugBtn: "Debug",
                 hideDebugBtn: "Hide Debug",
                 processingText: "Processing your Javanese script...",
-                processingPararagph: "Please be patient, startup process may take 30 seconds",
+                processingText2: "Please be patient, startup process may take 30 seconds",
                 resultsTitle: "Recognition Results",
                 debugTitle: "Debug Results",
                 footerText1: "Free for personal and commercial use",
@@ -35,7 +35,7 @@
                 debugBtn: "Debug",
                 hideDebugBtn: "Sembunyikan Debug",
                 processingText: "Memproses Aksara Jawa Anda...",
-                processingParagraph: "Mohon bersabar, proses startup dapat membutuhkan waktu 30 detik",
+                processingText2: "Mohon bersabar, proses startup dapat membutuhkan waktu 30 detik",
                 resultsTitle: "Hasil Pengenalan",
                 debugTitle: "Hasil Debug",
                 footerText1: "Free for personal and commercial use",
@@ -48,7 +48,7 @@
             }
         };
 
-        let currentLanguage = 'en';
+        let currentLanguage = 'id';
         let uploadedImage = null;
         let debugData = null;
 
@@ -69,7 +69,7 @@
             document.getElementById('debugBtn').textContent = t.debugBtn;
             document.getElementById('hideDebugBtn').textContent = t.hideDebugBtn;
             document.getElementById('processingText').textContent = t.processingText;
-            document.getElementById('processingParagraph').textContent = t.processingParagraph;
+            document.getElementById('processingText2').textContent = t.processingText2;
             document.getElementById('resultsTitle').textContent = t.resultsTitle;
             document.getElementById('debugTitle').textContent = t.debugTitle;
             document.getElementById('footerText1').textContent = t.footerText1;
@@ -88,7 +88,7 @@
 
         // Initialize language on page load
         function initializeLanguage() {
-            const savedLanguage = localStorage.getItem('preferredLanguage') || 'en';
+            const savedLanguage = localStorage.getItem('preferredLanguage') || 'id';
             document.getElementById('languageSelector').value = savedLanguage;
             changeLanguage(savedLanguage);
         }
