@@ -6,6 +6,7 @@ TESTS/
 TRAININGS_AND_TOOLS/
 static/
 templates/
+docs/
 .git/
 *.pth
 *.png
