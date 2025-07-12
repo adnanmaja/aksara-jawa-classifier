@@ -1,12 +1,23 @@
 # 🧠 Aksara Jawa Classifier
 
-A simple deep learning model to classify characters in the Javanese script (Aksara Jawa) using PyTorch and a ResNet18 backbone.
+A lightweight Flask-based web API that classifies Javanese script (Aksara Jawa) using ONNX-optimized models.  
+Designed for speed, low memory usage, and easy integration into web frontends.
 
 This project aims to preserve and promote the Javanese script by enabling machine-based recognition of its characters, including:
 - **Aksara Nglegena**
 - **Sandhangan**
 - **Pasangan**
-- **Angka**
+- **Angka** (Coming soon)
+
+---
+
+## 🚀 Live Demo
+
+Frontend: [https://www.nulisjawa.my.id](https://www.nulisjawa.my.id)  
+API: `https://aksara-container.delightfulcliff-10a792b4.southeastasia.azurecontainerapps.io/`  
+*(Note: You can try uploading an image of Aksara Jawa characters to see JSON output.)*
+
+---
 
 > 🧪 Currently in beta — more features and improvements are on the way!
 
@@ -15,12 +26,16 @@ This project aims to preserve and promote the Javanese script by enabling machin
 ## 📦 Features
 - Image classification of segmented Aksara Jawa characters
 - Trained on custom dataset with augmentation
-- ResNet18 architecture fine-tuned with PyTorch
+- ResNet18 architecture fine-tuned with PyTorch and powered by ONNX for fast, CPU-friendly inference
+- Dockerized backend deployed via **Azure Container Apps**
+- Frontend hosted with GitHub Pages + custom domain
+- HTTPS enabled via DNS and SSL setup
 - JSON label mapping
-- Evaluation logs after each epoch
+
+---
 
 ### Planned:
-- ⏳ Model retrained with segmented dataset
+- ⏳ Model retrained with more datasets
 - ⏳ Dataset expansion & noise filtering
 - ⏳ Numerical characters (Aksara angka)
 - ⏳ Murda characters (Aksara murda)
@@ -29,10 +44,15 @@ This project aims to preserve and promote the Javanese script by enabling machin
 ---
 
 ## 🧰 Tech Stack
-- Python, PyTorch
-- Torchvision
-- NumPy, Matplotlib
-- Flask (for upcoming deployment)
+| Layer        | Tool                        |
+|--------------|-----------------------------|
+| Backend      | Python + Flask              |
+| ML Inference | ONNX Runtime                |
+| Development  | Pytorch                     |
+| Container    | Docker                      |
+| Hosting      | Azure Container App (API)   |
+| Frontend     | HTML/CSS/JS via GitHub Pages|
+| Domain       | `.my.id` domain with DNS/API setup |
 
 ---
 
