@@ -80,6 +80,10 @@ Raw Images → Data Augmentation → Role Mapping → ResNet18 (Fine-tuned) → 
 
 ---
 
+## 📷 Web Interface
+![](preview1.png)
+
+---
 ## 📗 Code Examples 
 ### Model training pipeline
 <pre>
