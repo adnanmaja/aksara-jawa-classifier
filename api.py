@@ -1,5 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from PIL import Image
 import io
 from segment_characters import segment_by_projection
@@ -7,7 +9,6 @@ from aksara_parser import basePredict, sandhanganPredict, pasanganPredict
 from aksara_parser import classify_region, group_sandhangan, join_base_and_sandhangan, transliterate_grouped, integrate_pasangan
 from aksara_parser import baseDebug, sandhanganDebug, pasanganDebug
 import numpy as np
-
 
 app = Flask(__name__)
 CORS(app, origins='https://www.nulisjawa.my.id/', methods=['POST', 'GET'])  
@@ -19,6 +20,8 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+limiter = Limiter(app, key_func=get_remote_address)
+@limiter.limit("50 per minute")
 @app.route('/', methods=['POST'])
 def predict():
     try:

@@ -35,10 +35,16 @@ def preprocess_image(image):
 
 # === LABELS MAPPING ===
 label_map = [
-    "ba", "ba_suku", "ca", "ca_suku", "da", "da_suku", "dha", "dha_suku", "ga", "ga_suku",
-    "ha", "ha_suku", "ja", "ja_suku", "ka", "ka_suku", "la", "la_suku", "ma", "ma_suku",
-    "na", "na_suku", "nga", "nga_suku", "nya", "nya_suku", "pa", "pa_suku", "ra", "ra_suku",
-    "sa", "sa_suku", "ta", "ta_suku", "tha", "tha_suku", "wa", "wa_suku", "ya", "ya_suku"
+    "ba", "ba_cakra", "ba_cakrasuku", "ba_pangkon" ,"ba_suku", "ca", "ca_cakra", "ca_cakrasuku", "ca_pangkon" , "ca_suku", 
+    "da", "da_cakra", "da_cakrasuku", "da_pangkon" ,"da_suku", "dha", "dha_cakra", "dha_cakrasuku", "dha_pangkon" ,"dha_suku", 
+    "ga", "ga_cakra", "ga_cakrasuku", "ga_pangkon" ,"ga_suku","ha", "ha_cakra", "ha_cakrasuku", "ha_pangkon" ,"ha_suku", 
+    "ja", "ja_cakra", "ja_cakrasuku", "ja_pangkon" ,"ja_suku", "ka", "ka_cakra", "ka_cakrasuku", "ka_pangkon" ,"ka_suku", 
+    "la", "la_suku", "ma", "ma_suku",
+    "na", "na_suku", "nga", "nga_suku", 
+    "nya", "nya_suku", "pa", "pa_suku", 
+    "ra", "ra_suku","sa", "sa_suku", 
+    "ta", "ta_suku", "tha", "tha_suku", 
+    "wa", "wa_suku", "ya", "ya_suku"
 ]
 
 sandhangan_map = ['cakra', 'cakra2', 'keret',
