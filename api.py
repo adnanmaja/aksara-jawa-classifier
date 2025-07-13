@@ -10,7 +10,7 @@ import numpy as np
 
 
 app = Flask(__name__)
-CORS(app)  
+CORS(app, origins='https://www.nulisjawa.my.id/', methods=['POST', 'GET'])  
 
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp'}

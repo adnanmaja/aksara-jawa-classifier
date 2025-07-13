@@ -20,8 +20,11 @@
                 errorMessage: "Failed to process image. Please try again.",
                 noDebugData: "No debug data available",
                 seoHeader: "About aksara jawa scanner",
+                seoHeader2: "About aksara jawa",
                 seoParagraph1: "Aksara Jawa Scanner is an AI-powered tool specifically built to recognize and analyze handwritten Javanese script (Aksara Jawa). Using deep learning technology with a ResNet18 architecture, the system can accurately identify traditional Javanese characters and provide their transliteration.",
-                seoParagraph2: "Currently in beta version. More features and improvements are coming soon! Check out my GitHub or social media below for feedback and contributions!"
+                seoParagraph2: "Currently in beta version. More features and improvements are coming soon! Check out my GitHub or social media below for feedback and contributions!",
+                seoParagraph3: "Aksara Jawa, also called Javanese script or Hanacaraka, is a traditional alphabet used long ago in Java, Indonesia. It was mainly used to write the Javanese language, and it has a unique look with rounded letters and special marks called sandhangan that change the sound of the characters. Aksara Jawa comes from ancient Indian scripts and is part of Indonesia's rich cultural history.",
+                seoParagraph4: "While people don't use it in daily life anymore, you can still find it in books, schools, temples, monuments, and even on street signs in Central Java and Yogyakarta. Learning it is a great way to connect with Javanese heritage and keep the culture alive!"
             },
             id: {
                 mainTitle: "Scanner Aksara Jawa",
@@ -43,8 +46,11 @@
                 errorMessage: "Gagal memproses gambar. Silakan coba lagi.",
                 noDebugData: "Tidak ada data debug yang tersedia",
                 seoHeader: "Tentang scanner aksara jawa",
-                seoParagraph1: "Aksara Jawa Scanner adalah alat berbasis AI yang dibuat khusus untuk mengenali dan menganalisis tulisan tangan Aksara Jawa. Menggunakan teknologi deep learning dengan arsitektur ResNet18, sistem ini dapat mengenali karakter-karakter tradisional Aksara Jawa dengan akurat dan memberikan transliterasinya.",
-                seoParagraph2: "Saat ini masih dalam versi beta, fitur dan peningkatan lainnya akan segera hadir! Kunjungi GitHub atau media sosialku di bawah untuk masukan dan kontribusi!"
+                seoHeader2: "Tentang aksara jawa",
+                seoParagraph1: "Scanner Aksara Jawa adalah alat berbasis AI yang dibuat khusus untuk mengenali dan menganalisis tulisan tangan Aksara Jawa. Menggunakan teknologi deep learning dengan arsitektur ResNet18, sistem ini dapat mengenali karakter-karakter tradisional Aksara Jawa dengan akurat dan memberikan transliterasinya.",
+                seoParagraph2: "Saat ini masih dalam versi beta, fitur dan peningkatan lainnya akan segera hadir! Kunjungi GitHub atau media sosialku di bawah untuk masukan dan kontribusi!",
+                seoParagraph3: "Aksara Jawa, atau yang juga dikenal dengan sebutan Hanacaraka, adalah huruf tradisional yang dulu digunakan di Pulau Jawa, Indonesia. Aksara ini digunakan untuk menulis bahasa Jawa dan memiliki bentuk huruf yang khas dan melengkung, serta tanda-tanda tambahan yang disebut sandhangan untuk mengubah bunyi huruf. Aksara Jawa berasal dari aksara kuno India dan merupakan bagian dari sejarah budaya Indonesia.",
+                seoParagraph4: "Meskipun sudah jarang dipakai sehari-hari, aksara ini masih bisa ditemukan di buku, pelajaran sekolah, candi, monumen, dan papan nama jalan di Jawa Tengah dan Yogyakarta. Belajar aksara Jawa adalah cara yang seru untuk mengenal warisan budaya dan menjaga tradisi tetap hidup."
             }
         };
 
@@ -75,8 +81,11 @@
             document.getElementById('footerText1').textContent = t.footerText1;
             document.getElementById('footerText2').textContent = t.footerText2;
             document.getElementById('seoHeader').textContent = t.seoHeader;
+            document.getElementById('seoHeader2').textContent = t.seoHeader2;
             document.getElementById('seoParagraph1').textContent = t.seoParagraph1;
             document.getElementById('seoParagraph2').textContent = t.seoParagraph2;
+            document.getElementById('seoParagraph3').textContent = t.seoParagraph3;
+            document.getElementById('seoParagraph4').textContent = t.seoParagraph4;
             
             
             // Update HTML lang attribute
