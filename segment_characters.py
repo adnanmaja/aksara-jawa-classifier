@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageDraw
 
 def pad_and_resize(img, size=224, pad_color=255, padding=100):
     if isinstance(img, Image.Image):
@@ -47,13 +47,7 @@ def split_vertically_or_horizontally_if_needed(gray_char_img, aspect_thresh=2.0)
 
         return [gray_char_img]
 
-def segment_characters(pil_image, min_width=10, min_height=10):
-    import numpy as np
-    import cv2
-    from PIL import Image
-
-    
-
+def segment_characters(pil_image, min_width=10, min_height=10):    
     # Convert to grayscale
     if isinstance(pil_image, str):
         pil_image = Image.open(pil_image)
@@ -136,16 +130,44 @@ def segment_by_projection(pil_image, min_char_width=5, min_char_height=5):
                     })
     return segments
 
-
+def draw_bounding_boxes_pil(original_image, segmentation_results):
+    """
+    Draw bounding boxes on original image using PIL
+    
+    Args:
+        original_image: PIL.Image - the original input image
+        segmentation_results: list of dict - [{image: PIL.Image, bbox: (x, y, w, h)}, ...]
+    
+    Returns:
+        PIL.Image with bounding boxes drawn
+    """
+    # Create a copy to avoid modifying original
+    img_with_boxes = original_image.copy()
+    draw = ImageDraw.Draw(img_with_boxes)
+    
+    # Default colors if not provided
+    colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'cyan', 'magenta']
+    
+    for i, result in enumerate(segmentation_results):
+        bbox = result['bbox']  # (x, y, w, h)
+        x, y, w, h = bbox
+        
+        # Convert to corner coordinates for PIL
+        top_left = (x, y)
+        bottom_right = (x + w, y + h)
+        
+        # Get color for this box
+        color = colors[i % len(colors)]
+        
+        # Draw rectangle
+        draw.rectangle([top_left, bottom_right], outline=color, width=2)
+        
+        # Add index label
+        draw.text((x, y - 15), str(i), fill=color)
+    
+    return img_with_boxes
 
 if __name__ == "__main__":
-    import os
     image = Image.open("./TESTS/test_4.png")
     segments = segment_by_projection(image) 
-    output_dir = "./DATA/segmented_chars"
-    os.makedirs(output_dir, exist_ok=True)
-
-    for i, seg in enumerate(segments):
-        img = seg["image"]
-        x, y, w, h = seg["bbox"]
-        img.save(os.path.join(output_dir, f"char_{i}_x{x}_y{y}.png"))
+    print(type(draw_bounding_boxes_pil(image, segments)))

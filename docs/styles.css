@@ -316,7 +316,7 @@
             border-bottom: 1px solid #e2e8f0;
         }
 
-        .debug-btn {
+        .details-btn {
             background: #667eea;
             color: white;
             border: none;
@@ -329,12 +329,12 @@
             touch-action: manipulation;
         }
 
-        .debug-btn:hover {
+        .details-btn:hover {
             background: #395aef;
             transform: translateY(-1px);
         }
 
-        .debug-section {
+        .details-section {
             display: none;
             background: #f8fafc;
             border-radius: 15px;
@@ -345,7 +345,7 @@
             margin: 0 auto;
         }
 
-        .debug-header {
+        .details-header {
             font-size: clamp(1.2rem, 4vw, 1.4rem);
             color: #4a5568;
             margin-bottom: 20px;
@@ -354,14 +354,14 @@
             gap: 10px;
         }
 
-        .debug-grid {
+        .details-grid {
             display: grid;
             grid-template-columns: 1fr;
             gap: 15px;
             margin-bottom: 20px;
         }
 
-        .debug-item {
+        .details-item {
             background: white;
             padding: 15px;
             border-radius: 10px;
@@ -369,13 +369,13 @@
             transition: transform 0.2s ease;
         }
 
-        .debug-item h4 {
+        .details-item h4 {
             color: #667eea;
             margin-bottom: 10px;
             font-size: clamp(1rem, 4vw, 1.1rem);
         }
 
-        .debug-item pre {
+        .details-item pre {
             background: #f1f5f9;
             padding: 10px;
             border-radius: 5px;
@@ -536,7 +536,7 @@
                 width: 100%;
             }
 
-            .btn, .reset-btn, .debug-btn {
+            .btn, .reset-btn, .details-btn {
                 width: 100%;
                 max-width: 300px;
             }

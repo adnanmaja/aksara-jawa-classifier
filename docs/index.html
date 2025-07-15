@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Aksara Jawa Scanner, projek deep learning untuk mengenali aksara jawa menggunakan ResNet18.">
-    <meta name="keywords" content="Aksara Jawa, Scanner aksara jawa, Javanese script, OCR, handwriting recognition, AI, deep learning, ResNet18, traditional script, machine learning">
+    <meta name="description" content="Scanner Aksara Jawa, projek deep learning untuk mengenali aksara jawa menggunakan ResNet18.">
+    <meta name="keywords" content="Aksara Jawa, Scanner aksara jawa, Javanese script, OCR, handwriting recognition, AI, deep learning, ResNet18, Konvertor aksara jawa, machine learning">
     <meta name="author" content="Rafa Atmaja">
     <meta name="robots" content="index, follow">
     <meta name="language" content="Indonesia">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://www.nulisjawa.my.id">
-    <meta property="og:title" content="Aksara Jawa Scanner">
+    <meta property="og:title" content="Scanner Aksara Jawa">
     <meta property="og:description" content="Alat gratis untuk mengenali aksara Jawa tulisan tangan menggunakan deep learning. Unggah gambar Aksara Jawa Anda untuk pengenalan dan transliterasi.">
-    <meta property="og:site_name" content="Aksara Jawa Scanner">
+    <meta property="og:site_name" content="Scanner Aksara Jawa">
     <meta property="og:locale" content="id_ID">
     <meta property="og:locale:alternate" content="en_US">
-    <title>Aksara Jawa Scanner</title>
+    <title>Scanner Aksara Jawa</title>
     <link rel="canonical" href="https://www.nulisjawa.my.id">
     <link rel="sitemap" href="https://www.nulisjawa.my.id/sitemap.xml">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -26,8 +26,8 @@
     {
         "@context": "https://schema.org",
         "@type": "WebApplication",
-        "name": "Aksara Jawa Scanner",
-        "description": "AI-powered Javanese script recognition tool using deep learning ResNet18 for handwritten character analysis",
+        "name": "Scanner Aksara Jawa",
+        "description": "Alat gratis untuk mengenali aksara Jawa tulisan tangan menggunakan deep learning dan AI",
         "url": "https://www.nulisjawa.my.id",
         "applicationCategory": "EducationalApplication",
         "operatingSystem": "Web Browser",
@@ -48,7 +48,7 @@
         "datePublished": "2025-07-11",
         "dateModified": "2025-07-11",
         "inLanguage": ["id", "en"],
-        "keywords": "Aksara Jawa Scanner, projek deep learning untuk mengenali aksara jawa menggunakan ResNet18."
+        "keywords": "Aksara Jawa Scanner, projek deep learning untuk mengenali aksara jawa menggunakan ResNet18. Aksara jawa konvertor"
     }
     </script>
 
@@ -104,20 +104,25 @@
             
             <div class="button-container">
                 <button class="reset-btn" id="resetBtn2" onclick="resetInterface()">Back</button>
-                <button class="debug-btn" id="debugBtn" onclick="toggleDebugSection()">Debug</button>
+                <button class="details-btn" id="detailsBtn" onclick="toggleDetailsSection()">Details</button>
             </div>
         </div>
 
-        <div class="debug-section" id="debugSection">
-            <div class="debug-header">
-                <span id="debugTitle">Debug Results</span>
+        <div class="details-section" id="detailsSection">
+            <div class="details-header">
+                <span id="detailsTitle">Detailed Results</span>
             </div>
 
-            <div class="debug-grid" id="debugGrid">
+             <div class="">
+
+             </div>
+
+            <div class="details-grid" id="detailsGrid">
+                <img id="bboxImage" style="display: none; max-width: 100%;">
             </div>
             
             <div class="button-container">
-                <button class="reset-btn" id="hideDebugBtn" onclick="hideDebugSection()">Hide Debug</button>
+                <button class="reset-btn" id="hideDetailsBtn" onclick="hideDetailsSection()">Hide Details</button>
             </div>
         </div>
 

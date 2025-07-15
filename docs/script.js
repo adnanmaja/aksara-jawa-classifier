@@ -9,16 +9,16 @@
                 processBtn: "Process Image",
                 resetBtn: "Reset",
                 backBtn: "Back",
-                debugBtn: "Debug",
-                hideDebugBtn: "Hide Debug",
+                detailsBtn: "Details",
+                hideDetailsBtn: "Hide Details",
                 processingText: "Processing your Javanese script...",
                 processingText2: "Please be patient, startup process may take 30 seconds",
                 resultsTitle: "Recognition Results",
-                debugTitle: "Debug Results",
+                detailsTitle: "Detailed Results",
                 footerText1: "Free for personal and commercial use",
                 footerText2: "This project was made as part of my OCR learning, feedback is absolutely welcomed",
                 errorMessage: "Failed to process image. Please try again.",
-                noDebugData: "No debug data available",
+                noDetailsData: "No details data available",
                 seoHeader: "About aksara jawa scanner",
                 seoHeader2: "About aksara jawa",
                 seoParagraph1: "Aksara Jawa Scanner is an AI-powered tool specifically built to recognize and analyze handwritten Javanese script (Aksara Jawa). Using deep learning technology with a ResNet18 architecture, the system can accurately identify traditional Javanese characters and provide their transliteration.",
@@ -35,16 +35,16 @@
                 processBtn: "Proses Gambar",
                 resetBtn: "Reset",
                 backBtn: "Kembali",
-                debugBtn: "Debug",
-                hideDebugBtn: "Sembunyikan Debug",
+                detailsBtn: "Detail",
+                hideDetailsBtn: "Sembunyikan Detail",
                 processingText: "Memproses Aksara Jawa Anda...",
                 processingText2: "Mohon bersabar, proses startup dapat membutuhkan waktu 30 detik",
                 resultsTitle: "Hasil Pengenalan",
-                debugTitle: "Hasil Debug",
+                detailsTitle: "Hasil Detail",
                 footerText1: "Free for personal and commercial use",
                 footerText2: "This project was made as part of my OCR learning, feedback is absolutely welcomed",
                 errorMessage: "Gagal memproses gambar. Silakan coba lagi.",
-                noDebugData: "Tidak ada data debug yang tersedia",
+                noDetailsData: "Tidak ada data detail yang tersedia",
                 seoHeader: "Tentang scanner aksara jawa",
                 seoHeader2: "Tentang aksara jawa",
                 seoParagraph1: "Scanner Aksara Jawa adalah alat berbasis AI yang dibuat khusus untuk mengenali dan menganalisis tulisan tangan Aksara Jawa. Menggunakan teknologi deep learning dengan arsitektur ResNet18, sistem ini dapat mengenali karakter-karakter tradisional Aksara Jawa dengan akurat dan memberikan transliterasinya.",
@@ -56,7 +56,7 @@
 
         let currentLanguage = 'id';
         let uploadedImage = null;
-        let debugData = null;
+        let detailsData = null;
 
         // Language change function
         function changeLanguage(lang) {
@@ -72,12 +72,12 @@
             document.getElementById('processBtn').textContent = t.processBtn;
             document.getElementById('resetBtn1').textContent = t.resetBtn;
             document.getElementById('resetBtn2').textContent = t.backBtn;
-            document.getElementById('debugBtn').textContent = t.debugBtn;
-            document.getElementById('hideDebugBtn').textContent = t.hideDebugBtn;
+            document.getElementById('detailsBtn').textContent = t.detailsBtn;
+            document.getElementById('hideDetailsBtn').textContent = t.hideDetailsBtn;
             document.getElementById('processingText').textContent = t.processingText;
             document.getElementById('processingText2').textContent = t.processingText2;
             document.getElementById('resultsTitle').textContent = t.resultsTitle;
-            document.getElementById('debugTitle').textContent = t.debugTitle;
+            document.getElementById('detailsTitle').textContent = t.detailsTitle;
             document.getElementById('footerText1').textContent = t.footerText1;
             document.getElementById('footerText2').textContent = t.footerText2;
             document.getElementById('seoHeader').textContent = t.seoHeader;
@@ -110,7 +110,7 @@
         const processingSection = document.getElementById('processingSection');
         const resultsSection = document.getElementById('resultsSection');
         const footerSection = document.getElementById('footerSection');
-        const debugSection = document.getElementById('debugSection');
+        const detailsSection = document.getElementById('detailsSection');
 
         fileInput.addEventListener('change', handleFileSelect);
         uploadSection.addEventListener('click', () => fileInput.click());
@@ -153,7 +153,7 @@
                 previewSection.style.display = 'block';
                 resultsSection.style.display = 'none';
                 processingSection.style.display = 'none';
-                debugSection.style.display = 'none';
+                detailsSection.style.display = 'none';
             };
             reader.readAsDataURL(file);
         }
@@ -165,7 +165,7 @@
             previewSection.style.display = 'none';
             processingSection.style.display = 'block';
             resultsSection.style.display = 'none';
-            debugSection.style.display = 'none';
+            detailsSection.style.display = 'none';
 
             // API call
             await callOCRAPI(uploadedImage);
@@ -187,8 +187,8 @@
 
                 const results = await response.json();
                 
-                // Store debug data globally
-                debugData = results.debug;
+                // Store details data globally
+                detailsData = results.details;
                 
                 displayResults(results.prediction); 
             } catch (error) {
@@ -200,7 +200,7 @@
 
         function displayResults(predictions) {
             const predictionGrid = document.getElementById('predictionGrid');
-            
+            console.log("displayReluts called")
             predictionGrid.innerHTML = '';
 
             const fullTransliteration = predictions; 
@@ -224,43 +224,56 @@
             processingSection.style.display = 'none';
             resultsSection.style.display = 'block';
             uploadSection.style.display = 'block';
-            debugSection.style.display = 'none';
+            detailsSection.style.display = 'none';
         }
 
-        function populateDebugSection() {
-            const debugGrid = document.getElementById('debugGrid');
-            debugGrid.innerHTML = '';
+        function populateDetailsSection() {
+            const detailsGrid = document.getElementById('detailsGrid');
+            const bboxImage = document.getElementById('bboxImage');
             
-            if (!debugData) {
-                debugGrid.innerHTML = `<p>${translations[currentLanguage].noDebugData}</p>`;
+            detailsGrid.innerHTML = '';
+            
+            if (!detailsData) {
+                detailsGrid.innerHTML = `<p>${translations[currentLanguage].noDetailsData}</p>`;
                 return;
             }
 
-            // Iterate through debug object and display each key-value pair
-            for (const [key, value] of Object.entries(debugData)) {
-                const debugItem = document.createElement('div');
-                debugItem.className = 'debug-item';
+            // Iterate through details object and display each key-value pair
+            for (const [key, value] of Object.entries(detailsData)) {
+                const detailsItem = document.createElement('div');
+                detailsItem.className = 'details-item';
                 
-                debugItem.innerHTML = `
+                if (key === 'bbox'){
+                    const image = document.createElement('img');
+                    image.src = `data:image/png;base64,${value}`;
+                    image.style.maxWidth = '100%';
+                    image.style.border = '1px solid #ccc';
+                    image.style.borderRadius = '8px';
+                    detailsItem.innerHTML = `<h4>${key}</h4>`;
+                    detailsItem.appendChild(image);
+
+                } else {
+                    detailsItem.innerHTML = `
                     <h4>${key}</h4>
                     <pre>${JSON.stringify(value, null, 2)}</pre>
                 `;
-                
-                debugGrid.appendChild(debugItem);
+                }
+
+                detailsGrid.appendChild(detailsItem);
             }
         }
 
-        function toggleDebugSection() {
-            if (debugSection.style.display === 'none' || debugSection.style.display === '') {
-                populateDebugSection();
-                debugSection.style.display = 'block';
+        function toggleDetailsSection() {
+            if (detailsSection.style.display === 'none' || detailsSection.style.display === '') {
+                populateDetailsSection();
+                detailsSection.style.display = 'block';
             } else {
-                debugSection.style.display = 'none';
+                detailsSection.style.display = 'none';
             }
         }
 
-        function hideDebugSection() {
-            debugSection.style.display = 'none';
+        function hideDetailsSection() {
+            detailsSection.style.display = 'none';
         }
 
         function resetInterface() {
@@ -268,10 +281,10 @@
             previewSection.style.display = 'none';
             processingSection.style.display = 'none';
             resultsSection.style.display = 'none';
-            debugSection.style.display = 'none';
+            detailsSection.style.display = 'none';
             fileInput.value = '';
             uploadedImage = null;
-            debugData = null;
+            detailsData = null;
         }
 
         // File input functionality
