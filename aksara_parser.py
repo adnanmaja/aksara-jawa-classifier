@@ -34,11 +34,24 @@ def preprocess_image(image):
     return img_array
 
 # === LABELS MAPPING ===
+label_map = [
+    "ba", "ba_cakra", "ba_cakrasuku", "ba_pangkon" ,"ba_suku", "ca", "ca_cakra", "ca_cakrasuku", "ca_pangkon" , "ca_suku", 
+    "da", "da_cakra", "da_cakrasuku", "da_pangkon" ,"da_suku", "dha", "dha_cakra", "dha_cakrasuku", "dha_pangkon" ,"dha_suku", 
+    "ga", "ga_cakra", "ga_cakrasuku", "ga_pangkon" ,"ga_suku","ha", "ha_cakra", "ha_cakrasuku", "ha_pangkon" ,"ha_suku", 
+    "ja", "ja_cakra", "ja_cakrasuku", "ja_pangkon" ,"ja_suku", "ka", "ka_cakra", "ka_cakrasuku", "ka_pangkon" ,"ka_suku", 
+    "la", "la_cakra", "la_cakrasuku", "la_pangkon", "la_suku", "ma", "ma_cakra", "ma_cakrasuku", "ma_pangkon", "ma_suku",
+    "na", "na_cakra", "na_cakrasuku", "na_pangkon", "na_suku", "nga", "nga_cakra", "nga_cakrasuku", "nga_pangkon", "nga_suku", 
+    "nya", "nya_cakra", "nya_cakrasuku", "nya_pangkon", "nya_suku", "pa", "pa_cakra", "pa_cakrasuku", "pa_pangkon", "pa_suku", 
+    "ra", "ra_cakra", "ra_cakrasuku", "ra_pangkon", "ra_suku","sa", "sa_cakra", "sa_cakrasuku", "sa_pangkon", "sa_suku", 
+    "ta", "ta_cakra", "ta_cakrasuku", "ta_pangkon", "ta_suku", "tha", "tha_cakra", "tha_cakrasuku", "tha_pangkon", "tha_suku", 
+    "wa", "wa_cakra", "wa_cakrasuku", "wa_pangkon", "wa_suku", "ya", "ya_cakra", "ya_cakrasuku", "ya_pangkon", "ya_suku"
+]
+
 # label_map = [
-#     "ba", "ba_cakra", "ba_cakrasuku", "ba_pangkon" ,"ba_suku", "ca", "ca_cakra", "ca_cakrasuku", "ca_pangkon" , "ca_suku", 
-#     "da", "da_cakra", "da_cakrasuku", "da_pangkon" ,"da_suku", "dha", "dha_cakra", "dha_cakrasuku", "dha_pangkon" ,"dha_suku", 
-#     "ga", "ga_cakra", "ga_cakrasuku", "ga_pangkon" ,"ga_suku","ha", "ha_cakra", "ha_cakrasuku", "ha_pangkon" ,"ha_suku", 
-#     "ja", "ja_cakra", "ja_cakrasuku", "ja_pangkon" ,"ja_suku", "ka", "ka_cakra", "ka_cakrasuku", "ka_pangkon" ,"ka_suku", 
+#     "ba", "ba_suku", "ca", "ca_suku", 
+#     "da", "da_suku", "dha", "dha_suku", 
+#     "ga", "ga_suku","ha", "ha_suku", 
+#     "ja", "ja_suku", "ka", "ka_suku", 
 #     "la", "la_suku", "ma", "ma_suku",
 #     "na", "na_suku", "nga", "nga_suku", 
 #     "nya", "nya_suku", "pa", "pa_suku", 
@@ -46,19 +59,6 @@ def preprocess_image(image):
 #     "ta", "ta_suku", "tha", "tha_suku", 
 #     "wa", "wa_suku", "ya", "ya_suku"
 # ]
-
-label_map = [
-    "ba", "ba_suku", "ca", "ca_suku", 
-    "da", "da_suku", "dha", "dha_suku", 
-    "ga", "ga_suku","ha", "ha_suku", 
-    "ja", "ja_suku", "ka", "ka_suku", 
-    "la", "la_suku", "ma", "ma_suku",
-    "na", "na_suku", "nga", "nga_suku", 
-    "nya", "nya_suku", "pa", "pa_suku", 
-    "ra", "ra_suku","sa", "sa_suku", 
-    "ta", "ta_suku", "tha", "tha_suku", 
-    "wa", "wa_suku", "ya", "ya_suku"
-]
 
 sandhangan_map = ['cakra', 'cakra2', 'keret',
 'mbuhai', 'mbuhau', 'mbuhii', 'mbuhuu', 'pangkal',
