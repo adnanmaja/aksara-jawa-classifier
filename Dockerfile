@@ -11,6 +11,6 @@ COPY . .
 COPY . /app
 COPY ONNX_MODELS/ /app/ONNX_MODELS/
 
-EXPOSE 80
+EXPOSE 8000
 
-CMD ["gunicorn", "--bind", "0.0.0.0:80", "api:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "api:app"]

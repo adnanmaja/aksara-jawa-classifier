@@ -228,6 +228,7 @@
         }
 
         function populateDetailsSection() {
+            console.log("populateDetails called")
             const detailsGrid = document.getElementById('detailsGrid');
             const bboxImage = document.getElementById('bboxImage');
             

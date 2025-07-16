@@ -1,7 +1,5 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
 from PIL import Image
 import io
 from segment_characters import segment_by_projection, draw_bounding_boxes_pil
@@ -12,8 +10,7 @@ import numpy as np
 import base64
 
 app = Flask(__name__)
-CORS(app, origins='https://www.nulisjawa.my.id/', methods=['POST', 'GET'])  
-
+CORS(app, origins="*", methods=['POST', 'GET', 'OPTIONS'])
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp'}
 
@@ -21,11 +18,8 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-
 # === MAIN ENDPOINT FUNCTIONALITY ===
-limiter = Limiter(get_remote_address, app=app,)
 @app.route('/', methods=['POST'])
-@limiter.limit("5 per minute")
 def predict():
     try:
         # Check if the file is present in request
@@ -95,7 +89,7 @@ def predict():
         print(f"[GROUPED] Type: {type(grouped)}, {grouped}")
         final_text = transliterate_grouped(grouped_result)
 
-        # Turning a PIL.Image (bbox_visualization) to a base64 so the dumbass frontend can display it
+        # Turning a PIL.Image (bbox_visualization) to a base64 for the frontend to display it
         print(f"About to do base64 conversion for {bbox_visualization}")
         buffer = io.BytesIO()
         bbox_visualization.save(buffer, format='PNG')
@@ -109,7 +103,7 @@ def predict():
                 "sandhangan": sandhangan_debug,
                 "pasangan": pasangan_debug,
                 "joined_base_and_sandhangan()": grouped_result,
-                "group_sandhangan()": grouped,
+                "group_sandhangan()": grouped
             },
             "prediction": final_text
         })
@@ -129,4 +123,4 @@ def too_large(e):
 
 if __name__ == "__main__":
     # app.run()
-    app.run(debug=True, host='0.0.0.0', port=80)   
+    app.run(debug=True, host='0.0.0.0', port=8000)   
