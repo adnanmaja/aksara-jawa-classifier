@@ -12,9 +12,6 @@ This project aims to preserve and promote the Javanese script by enabling machin
 ## 🚀 Live Demo
 
 Frontend: [https://www.nulisjawa.my.id](https://www.nulisjawa.my.id)  
-API: `https://aksara-container.delightfulcliff-10a792b4.southeastasia.azurecontainerapps.io/`  
-*(Note: You can try uploading an image of Aksara Jawa characters to see JSON output.)*
-
 > Currently in beta — more features and improvements are on the way!
 
 ---
