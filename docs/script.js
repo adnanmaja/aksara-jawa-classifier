@@ -3,6 +3,7 @@
             en: {
                 mainTitle: "Aksara Jawa Scanner",
                 mainSubtitle: "Upload your handwritten Javanese script image for recognition",
+                mainDisclaimer: "Sorry, the site is currently under maintenance",
                 uploadText: "Drop your image here or click to browse",
                 uploadSubtext: "Supports JPG, PNG, WebP files up to 16MB",
                 chooseFileBtn: "Choose File",
@@ -29,6 +30,7 @@
             id: {
                 mainTitle: "Scanner Aksara Jawa",
                 mainSubtitle: "Unggah gambar tulisan tangan Aksara Jawa untuk di-scan",
+                mainDisclaimer: "Maaf, website ini sedang dalam perbaikan",
                 uploadText: "Letakkan gambar di sini atau klik untuk telusuri",
                 uploadSubtext: "Mendukung file JPG, PNG, WebP hingga 16MB",
                 chooseFileBtn: "Pilih File",
@@ -66,6 +68,7 @@
             // Update all text elements
             document.getElementById('mainTitle').textContent = t.mainTitle;
             document.getElementById('mainSubtitle').textContent = t.mainSubtitle;
+            document.getElementById('mainDisclaimer').textContent = t.mainDisclaimer;
             document.getElementById('uploadText').textContent = t.uploadText;
             document.getElementById('uploadSubtext').textContent = t.uploadSubtext;
             document.getElementById('chooseFileBtn').textContent = t.chooseFileBtn;
