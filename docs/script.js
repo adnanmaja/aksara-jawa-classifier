@@ -179,7 +179,7 @@
             formData.append('file', imageFile);
             
             try {
-                const response = await fetch('https://aksara-container.politecoast-74d29664.southeastasia.azurecontainerapps.io/', { 
+                const response = await fetch('https://aksara-container.bluetree-e440c67f.southeastasia.azurecontainerapps.io/', { 
                     method: 'POST',
                     body: formData
                 });
