@@ -167,7 +167,7 @@
             cursor: pointer;
             font-size: clamp(0.6rem, 3vw, 0.7rem);
             transition: all 0.3s ease;
-            margin: 5px;
+            margin-top: 5px;
             touch-action: manipulation;
         }
 
@@ -200,14 +200,26 @@
 
         .sample-section {
             display: none;
-            margin-bottom: 30px;
-            text-align: center;
+            justify-content: center;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
 
         .sample-section h2{
             color: #4a5568;
-            margin-bottom: 20px;
             font-size: clamp(1.5rem, 4vw, 2rem);
+        }
+
+        .sample-section p{
+            color: #718096;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: clamp(1rem, 3vw, 1.1rem);
         }
 
         .sample-grid {
@@ -230,11 +242,6 @@
         .sample-item:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-        }
-
-        .sample-item.selected {
-            border-color: #667eea;
-            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
         }
 
         .sample-img {

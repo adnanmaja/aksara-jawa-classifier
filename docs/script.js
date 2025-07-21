@@ -2,10 +2,14 @@
         const translations = {
             en: {
                 mainTitle: "Aksara Jawa Scanner",
-                mainSubtitle: "Upload your handwritten Javanese script image for recognition",
+                mainSubtitle: "Upload your Javanese script image for recognition",
                 mainDisclaimer: "Sorry, the site is currently under maintenance",
                 uploadText: "Drop your image here or click to browse",
                 uploadSubtext: "Supports JPG, PNG, WebP files up to 16MB",
+                sampleSubtext: "Or select from sample images",
+                sampleBtn: "Image Samples",
+                sampleHeader: "Image Samples",
+                sampleDescription: "Select an image sample to try",
                 chooseFileBtn: "Choose File",
                 processBtn: "Process Image",
                 resetBtn: "Reset",
@@ -29,10 +33,14 @@
             },
             id: {
                 mainTitle: "Scanner Aksara Jawa",
-                mainSubtitle: "Unggah gambar tulisan tangan Aksara Jawa untuk di-scan",
+                mainSubtitle: "Unggah gambar tulisan Aksara Jawa untuk di-scan",
                 mainDisclaimer: "Maaf, website ini sedang dalam perbaikan",
                 uploadText: "Letakkan gambar di sini atau klik untuk telusuri",
                 uploadSubtext: "Mendukung file JPG, PNG, WebP hingga 16MB",
+                sampleSubtext: "Atau gunakan sampel gambar",
+                sampleBtn: "Sampel gambar",
+                sampleHeader: "Sampel gambar",
+                sampleDescription: "Pilih gambar untuk dicoba",
                 chooseFileBtn: "Pilih File",
                 processBtn: "Proses Gambar",
                 resetBtn: "Reset",
@@ -71,6 +79,10 @@
             document.getElementById('mainDisclaimer').textContent = t.mainDisclaimer;
             document.getElementById('uploadText').textContent = t.uploadText;
             document.getElementById('uploadSubtext').textContent = t.uploadSubtext;
+            document.getElementById('sampleSubtext').textContent = t.sampleSubtext;
+            document.getElementById('sampleBtn').textContent = t.sampleBtn;
+            document.getElementById('sampleHeader').textContent = t.sampleHeader;
+            document.getElementById('sampleDescription').textContent = t.sampleDescription;
             document.getElementById('chooseFileBtn').textContent = t.chooseFileBtn;
             document.getElementById('processBtn').textContent = t.processBtn;
             document.getElementById('resetBtn1').textContent = t.resetBtn;
@@ -228,6 +240,7 @@
 
             document.getElementById('sampleSection').style.display = 'block';
             const grid = document.getElementById('sampleGrid');
+            grid.innerHTML = '';
 
             //for each sample in sampleImages
              sampleImages.forEach(sample => {
@@ -241,6 +254,8 @@
                 sampleItem.addEventListener('click', () => displayImagePreview(sample.url));
                 grid.appendChild(sampleItem);
             });
+
+            uploadSection.style.display = 'none';
         }
 
         function handleImageError(img) {
@@ -333,6 +348,7 @@
             processingSection.style.display = 'none';
             resultsSection.style.display = 'none';
             detailsSection.style.display = 'none';
+            sampleSection.style.display = 'none';
             fileInput.value = '';
             uploadedImage = null;
             detailsData = null;

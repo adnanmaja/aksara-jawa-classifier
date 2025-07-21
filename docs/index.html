@@ -66,7 +66,7 @@
 
         <div class="header">
             <h1 id="mainTitle">Aksara Jawa Scanner</h1>
-            <h2 id="mainSubtitle">Upload your handwritten Javanese script image for recognition</h2>
+            <h2 id="mainSubtitle">Upload your Javanese script image for recognition</h2>
             <p id="mainDisclaimer">Sorry, the site is currently under maintenance</p>
         </div>
 
@@ -80,10 +80,12 @@
             <button class="sample-btn" id="sampleBtn">Image Samples</button>
         </div>
 
-        <div class="sample-section" id="sampleSection">
+        <section class="sample-section" id="sampleSection">
             <h2 id="sampleHeader">Image samples</h2>
+            <p id="sampleDescription">Select an image sample to try</p>
             <div class="sample-grid" id="sampleGrid"></div>
-        </div>
+            <button class="reset-btn" id="resetBtn1" onclick="resetInterface()">Reset</button>
+        </section>
 
         <div class="preview-section" id="previewSection">
             <img id="imagePreview" class="image-preview" alt="Uploaded image preview">
