@@ -149,10 +149,29 @@
             cursor: pointer;
             transition: all 0.3s ease;
             margin-top: 15px;
+            margin-bottom: 5px;
             touch-action: manipulation;
         }
 
         .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .sample-btn{
+            background: linear-gradient(135deg, #667eea, #4DAF7C);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: clamp(0.6rem, 3vw, 0.7rem);
+            transition: all 0.3s ease;
+            margin: 5px;
+            touch-action: manipulation;
+        }
+
+        .sample-btn:hover{
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
         }
@@ -177,6 +196,60 @@
             line-height: 1.6;
             margin-bottom: 15px;
             font-size: clamp(1rem, 3vw, 1.1rem);
+        }
+
+        .sample-section {
+            display: none;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .sample-section h2{
+            color: #4a5568;
+            margin-bottom: 20px;
+            font-size: clamp(1.5rem, 4vw, 2rem);
+        }
+
+        .sample-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .sample-item {
+            border: 3px solid transparent;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .sample-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .sample-item.selected {
+            border-color: #667eea;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .sample-img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .sample-name {
+            padding: 10px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #555;
+            background: #f8f9fa;
         }
 
         .preview-section {

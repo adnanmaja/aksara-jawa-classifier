@@ -107,6 +107,7 @@
 
         // File input handling
         const fileInput = document.getElementById('fileInput');
+        const sampleSection = document.getElementById('sampleSection');
         const uploadSection = document.getElementById('uploadSection');
         const previewSection = document.getElementById('previewSection');
         const imagePreview = document.getElementById('imagePreview');
@@ -116,7 +117,6 @@
         const detailsSection = document.getElementById('detailsSection');
 
         fileInput.addEventListener('change', handleFileSelect);
-        uploadSection.addEventListener('click', () => fileInput.click());
         uploadSection.addEventListener('dragover', handleDragOver);
         uploadSection.addEventListener('dragleave', handleDragLeave);
         uploadSection.addEventListener('drop', handleDrop);
@@ -147,22 +147,39 @@
             }
         }
 
-        function displayImagePreview(file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                imagePreview.src = e.target.result;
+        async function displayImagePreview(input) {
+            if (typeof input === 'string') { // If its a url from image samples
+                const response = await fetch(input);
+                const blob = await response.blob();
+                const filename = input.split('/').pop() || 'sample.jpg';
+                const file = new File([blob], filename, { type: blob.type });
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+
                 uploadedImage = file;
-                uploadSection.style.display = 'none';
-                previewSection.style.display = 'block';
-                resultsSection.style.display = 'none';
-                processingSection.style.display = 'none';
-                detailsSection.style.display = 'none';
-            };
-            reader.readAsDataURL(file);
+            } else if (input instanceof File) { // If its an actual file (e.g from file explorer)
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                };
+                reader.readAsDataURL(input);
+                uploadedImage = input;
+            } else {
+                console.error('Unsupported input type passed to displayImagePreview');
+                return;
+            }
+
+            uploadSection.style.display = 'none';
+            previewSection.style.display = 'block';
+            sampleSection.style.display = 'none';
         }
 
         async function processImage() {
-            if (!uploadedImage) return;
+            // if (!uploadedImage) return;
 
             // Hide preview and show processing
             previewSection.style.display = 'none';
@@ -199,6 +216,36 @@
                 alert(translations[currentLanguage].errorMessage);
                 resetInterface();
             }
+        }
+
+        function initializeSample(){
+            const sampleImages = [
+            {name: '1', url: './samples/test_1.png'},
+            {name: '2', url: './samples/test_2.png'},
+            {name: '3', url: './samples/test_3.png'},
+            {name: '4', url: './samples/test_4.png'},
+            {name: '5', url: './samples/test_5.png'}];
+
+            document.getElementById('sampleSection').style.display = 'block';
+            const grid = document.getElementById('sampleGrid');
+
+            //for each sample in sampleImages
+             sampleImages.forEach(sample => {
+                const sampleItem = document.createElement('div');
+                sampleItem.className = 'sample-item';
+                sampleItem.innerHTML = `
+                    <img src="${sample.url}" alt="${sample.name}" class="sample-img" onerror="handleImageError(this)">
+                    <div class="sample-name">${sample.name}</div>
+                `;
+                
+                sampleItem.addEventListener('click', () => displayImagePreview(sample.url));
+                grid.appendChild(sampleItem);
+            });
+        }
+
+        function handleImageError(img) {
+            img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDE1MCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxNTAiIGhlaWdodD0iMTIwIiBmaWxsPSIjZjBmMGYwIi8+CjxwYXRoIGQ9Ik03NSA0MEM4MS42Mjc0IDQwIDg3IDQ1LjM3MjYgODcgNTJDODcgNTguNjI3NCA4MS42Mjc0IDY0IDc1IDY0QzY4LjM3MjYgNjQgNjMgNTguNjI3NCA2MyA1MkM2MyA0NS4zNzI2IDY4LjM3MjYgNDAgNzUgNDBaIiBmaWxsPSIjY2NjIi8+CjxwYXRoIGQ9Ik02MCA3NkwxMDAgNzZMMTAwIDg0TDYwIDg0TDYwIDc2WiIgZmlsbD0iI2NjYyIvPgo8L3N2Zz4K';
+            img.parentElement.style.opacity = '0.5';
         }
 
         function displayResults(predictions) {
@@ -308,6 +355,12 @@
         // Upload section click handler
         document.getElementById('uploadSection').addEventListener('click', function() {
             document.getElementById('fileInput').click();
+        });
+
+        // Image samples button 
+        document.getElementById('sampleBtn').addEventListener('click', function(e){
+            e.stopPropagation();
+            initializeSample();
         });
 
         // Choose file button
