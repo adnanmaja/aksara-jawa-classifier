@@ -33,21 +33,22 @@
             },
             id: {
                 mainTitle: "Scanner Aksara Jawa",
-                mainSubtitle: "Unggah gambar tulisan Aksara Jawa untuk di-scan",
+                mainSubtitle: "Upload gambar tulisan aksara Jawa untuk dikonversi secara otomatis menggunakan deep learning",
+                mainDescription: "Tool gratis berbasis machine learning untuk mengenali dan mentransliterasi tulisan tangan aksara Jawa dengan akurasi tinggi menggunakan ResNet18.",
                 mainDisclaimer: "Maaf, website ini sedang dalam perbaikan",
-                uploadText: "Letakkan gambar di sini atau klik untuk telusuri",
-                uploadSubtext: "Mendukung file JPG, PNG, WebP hingga 16MB",
-                sampleSubtext: "Atau gunakan sampel gambar",
-                sampleBtn: "Sampel gambar",
-                sampleHeader: "Sampel gambar",
-                sampleDescription: "Pilih gambar untuk dicoba",
-                chooseFileBtn: "Pilih File",
+                uploadText: "Seret gambar aksara Jawa ke sini atau klik untuk memilih file",
+                uploadSubtext: "Mendukung format JPG, PNG, WebP (maksimal 10MB)",
+                sampleSubtext: "Atau pilih dari contoh gambar aksara Jawa",
+                sampleBtn: "Contoh Gambar Aksara Jawa",
+                sampleHeader: "Contoh Gambar Aksara Jawa",
+                sampleDescription: "Pilih salah satu contoh gambar untuk mencoba scanner aksara Jawa",
+                chooseFileBtn: "Pilih File Gambar",
                 processBtn: "Proses Gambar",
                 resetBtn: "Reset",
                 backBtn: "Kembali",
                 detailsBtn: "Detail",
                 hideDetailsBtn: "Sembunyikan Detail",
-                processingText: "Memproses Aksara Jawa Anda...",
+                processingText: "Sedang memproses Aksara Jawa Anda...",
                 processingText2: "Mohon bersabar, proses startup dapat membutuhkan waktu 30 detik",
                 resultsTitle: "Hasil Pengenalan",
                 detailsTitle: "Hasil Detail",
@@ -61,6 +62,39 @@
                 seoParagraph2: "Saat ini masih dalam versi beta, fitur dan peningkatan lainnya akan segera hadir! Kunjungi GitHub atau media sosialku di bawah untuk masukan dan kontribusi!",
                 seoParagraph3: "Aksara Jawa, atau yang juga dikenal dengan sebutan Hanacaraka, adalah huruf tradisional yang dulu digunakan di Pulau Jawa, Indonesia. Aksara ini digunakan untuk menulis bahasa Jawa dan memiliki bentuk huruf yang khas dan melengkung, serta tanda-tanda tambahan yang disebut sandhangan untuk mengubah bunyi huruf. Aksara Jawa berasal dari aksara kuno India dan merupakan bagian dari sejarah budaya Indonesia.",
                 seoParagraph4: "Meskipun sudah jarang dipakai sehari-hari, aksara ini masih bisa ditemukan di buku, pelajaran sekolah, candi, monumen, dan papan nama jalan di Jawa Tengah dan Yogyakarta. Belajar aksara Jawa adalah cara yang seru untuk mengenal warisan budaya dan menjaga tradisi tetap hidup."
+            },
+            jv: {
+                mainTitle: "Scanner Aksara Jawa",
+                mainSubtitle: "Unggah gambar tulisan aksara Jawa kanggo dikonversi sacara otomatis nganggo deep learning",
+                mainDescription: "Piranti gratis adhedhasar machine learning kanggo ngenali lan mentransliterasi tulisan tangan aksara Jawa kanthi akurasi dhuwur nganggo ResNet18.",
+                mainDisclaimer: "Nuwun sewu, situs web iki lagi dalam perbaikan",
+                uploadText: "Seret gambar aksara Jawa menyang kene utawa klik kanggo milih file",
+                uploadSubtext: "Ndhukung format JPG, PNG, WebP (maksimal 10MB)",
+                sampleSubtext: "Utawa pilih saka gambar conto aksara Jawa",
+                sampleBtn: "Gambar Conto Aksara Jawa",
+                sampleHeader: "Gambar Conto Aksara Jawa",
+                sampleDescription: "Pilih salah siji gambar conto kanggo nyoba scanner aksara Jawa",
+                chooseFileBtn: "Pilih File Gambar",
+                processBtn: "Proses Gambar",
+                resetBtn: "Reset",
+                backBtn: "Bali",
+                detailsBtn: "Rincian",
+                hideDetailsBtn: "Sembunyikan Rincian",
+                processingText: "Sedang ngolah Aksara Jawa panjenengan...",
+                processingText2: "Mangga entenana, proses wiwitan bisa butuh wektu nganti 30 detik",
+                resultsTitle: "Asil Pangenalan",
+                detailsTitle: "Asil Rincian",
+                footerText1: "Free for personal and commercial use",
+                footerText2: "This project was made as part of my OCR learning, feedback is absolutely welcomed",
+                errorMessage: "Gagal memproses gambar. Silakan coba lagi.",
+                noDetailsData: "Tidak ada data detail yang tersedia",
+                seoHeader: "Babagan scanner aksara Jawa",
+                seoHeader2: "Babagan aksara Jawa",
+                seoParagraph1: "Scanner Aksara Jawa iku piranti adhedhasar AI sing digawe khusus kanggo ngenali lan nganalisa tulisan tangan Aksara Jawa. Nggunakake teknologi deep learning nganggo arsitektur ResNet18, sistem iki bisa ngenali karakter tradisional Aksara Jawa kanthi tepat lan nyedhiyakake transliterasine.",
+                seoParagraph2: "Saiki isih versi beta, fitur lan peningkatan liyane bakal enggal teka! Bukak GitHub utawa media sosialku ing ngisor kanggo masukan lan kontribusi!",
+                seoParagraph3: "Aksara Jawa, utawa sing dikenal uga kanthi jeneng Hanacaraka, yaiku huruf tradisional sing biyen dienggo ing Pulo Jawa, Indonesia. Aksara iki dienggo kanggo nulis basa Jawa lan nduweni wangun huruf sing khas lan mlengkung, uga ana tandha tambahan sing diarani sandhangan kanggo ngowahi swara hurufe. Aksara Jawa asalé saka aksara kuna India lan dadi bagéan saka sajarah budaya Indonesia.",
+                seoParagraph4: "Sanajan saiki wis jarang dienggo saben dina, aksara iki isih bisa ditemokake ing buku, pelajaran sekolah, candi, monumen, lan papan jeneng dalan ing Jawa Tengah lan Yogyakarta. Sinau aksara Jawa iku cara sing nyenengake kanggo ngenali warisan budaya lan njaga tradhisi supaya tetep urip."
+
             }
         };
 
@@ -76,7 +110,7 @@
             // Update all text elements
             document.getElementById('mainTitle').textContent = t.mainTitle;
             document.getElementById('mainSubtitle').textContent = t.mainSubtitle;
-            document.getElementById('mainDisclaimer').textContent = t.mainDisclaimer;
+            // document.getElementById('mainDisclaimer').textContent = t.mainDisclaimer;
             document.getElementById('uploadText').textContent = t.uploadText;
             document.getElementById('uploadSubtext').textContent = t.uploadSubtext;
             document.getElementById('sampleSubtext').textContent = t.sampleSubtext;
@@ -85,8 +119,7 @@
             document.getElementById('sampleDescription').textContent = t.sampleDescription;
             document.getElementById('chooseFileBtn').textContent = t.chooseFileBtn;
             document.getElementById('processBtn').textContent = t.processBtn;
-            document.getElementById('resetBtn1').textContent = t.resetBtn;
-            document.getElementById('resetBtn2').textContent = t.backBtn;
+            document.getElementById('resetBtn').textContent = t.resetBtn;
             document.getElementById('detailsBtn').textContent = t.detailsBtn;
             document.getElementById('hideDetailsBtn').textContent = t.hideDetailsBtn;
             document.getElementById('processingText').textContent = t.processingText;
@@ -208,7 +241,7 @@
             formData.append('file', imageFile);
             
             try {
-                const response = await fetch('https://aksara-container.bluetree-e440c67f.southeastasia.azurecontainerapps.io/', { 
+                const response = await fetch('https://aksara-container.politecoast-74d29664.southeastasia.azurecontainerapps.io/', { 
                     method: 'POST',
                     body: formData
                 });

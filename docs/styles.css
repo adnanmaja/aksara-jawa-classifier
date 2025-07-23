@@ -207,7 +207,7 @@
             background: white;
             border-radius: 15px;
             box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .sample-section h2{
@@ -224,7 +224,7 @@
 
         .sample-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 15px;
             margin-bottom: 20px;
         }

@@ -1,157 +1,217 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Scanner Aksara Jawa, projek deep learning untuk mengenali aksara jawa menggunakan ResNet18.">
-    <meta name="keywords" content="Aksara Jawa, Scanner aksara jawa, Javanese script, OCR, handwriting recognition, AI, deep learning, ResNet18, Konvertor aksara jawa, machine learning">
+    <meta name="description" content="Scanner Aksara Jawa gratis - Pengenalan tulisan tangan aksara Jawa otomatis menggunakan deep learning ResNet18. Upload gambar aksara Jawa dan dapatkan transliterasi instan. Tool OCR aksara Jawa terbaik di Indonesia.">
+    <meta name="keywords" content="scanner aksara jawa, pengenalan aksara jawa, OCR aksara jawa, konverter aksara jawa, transliterasi aksara jawa, hanacaraka scanner, belajar aksara jawa, tulisan jawa kuno, ResNet18 aksara jawa, deep learning aksara jawa, CNN aksara jawa, machine learning Indonesia, budaya jawa, pendidikan jawa, digitalisasi aksara jawa">
     <meta name="author" content="Rafa Atmaja">
     <meta name="robots" content="index, follow">
-    <meta name="language" content="Indonesia">
+    <meta name="language" content="id">
+    <meta name="geo.region" content="ID-JI">
+    <meta name="geo.placename" content="Yogyakarta">
+    <meta name="geo.position" content="-7.7956;110.3695">
+    <meta name="ICBM" content="-7.7956, 110.3695">
+    
+    <!-- Open Graph for Indonesian audience -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://www.nulisjawa.my.id">
-    <meta property="og:title" content="Scanner Aksara Jawa">
-    <meta property="og:description" content="Alat gratis untuk mengenali aksara Jawa tulisan tangan menggunakan deep learning. Unggah gambar Aksara Jawa Anda untuk pengenalan dan transliterasi.">
+    <meta property="og:title" content="Scanner Aksara Jawa - Pengenalan Tulisan Hanacaraka Otomatis">
+    <meta property="og:description" content="Tool gratis untuk mengenali dan mengkonversi tulisan tangan aksara Jawa menggunakan deep learning ResNet18. Teknologi machine learning untuk melestarikan budaya Jawa. Cocok untuk pelajar, peneliti, dan pecinta budaya Jawa.">
+    <meta property="og:image" content="https://www.nulisjawa.my.id/og-image.jpg">
     <meta property="og:site_name" content="Scanner Aksara Jawa">
     <meta property="og:locale" content="id_ID">
-    <meta property="og:locale:alternate" content="en_US">
-    <title>Scanner Aksara Jawa</title>
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Scanner Aksara Jawa - Tool Gratis Pengenalan Hanacaraka">
+    <meta name="twitter:description" content="Teknologi deep learning ResNet18 untuk mengenali tulisan tangan aksara Jawa. Gratis, mudah digunakan, akurat.">
+    <meta name="twitter:image" content="https://www.nulisjawa.my.id/twitter-card.jpg">
+    
+    <title>Scanner Aksara Jawa - Pengenalan Tulisan Hanacaraka Otomatis Gratis</title>
     <link rel="canonical" href="https://www.nulisjawa.my.id">
     <link rel="sitemap" href="https://www.nulisjawa.my.id/sitemap.xml">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="icon" type="image/png" href="icon2.png">
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="preload" href="./styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="./styles.css"></noscript>
 
+    <!-- Schema.org -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "WebApplication",
         "name": "Scanner Aksara Jawa",
-        "description": "Alat gratis untuk mengenali aksara Jawa tulisan tangan menggunakan deep learning dan AI",
+        "alternateName": ["Pengenalan Aksara Jawa", "OCR Hanacaraka", "Konverter Aksara Jawa"],
+        "description": "Aplikasi gratis untuk mengenali dan mengkonversi tulisan tangan aksara Jawa menggunakan teknologi deep learning ResNet18. Mendukung digitalisasi warisan budaya Jawa.",
         "url": "https://www.nulisjawa.my.id",
         "applicationCategory": "EducationalApplication",
         "operatingSystem": "Web Browser",
+        "inLanguage": ["id", "jv"],
+        "audience": {
+            "@type": "Audience",
+            "audienceType": "Students, Researchers, Cultural Enthusiasts",
+            "geographicArea": {
+                "@type": "Country",
+                "name": "Indonesia",
+                "sameAs": "https://en.wikipedia.org/wiki/Indonesia"
+            }
+        },
         "offers": {
             "@type": "Offer",
             "price": "0",
-            "priceCurrency": "USD"
+            "priceCurrency": "IDR",
+            "availability": "https://schema.org/InStock"
         },
         "author": {
             "@type": "Person",
             "name": "Rafa Atmaja",
-            "url": "https://www.linkedin.com/in/rafa-adnan-0329b4321"
+            "url": "https://www.linkedin.com/in/rafa-adnan-0329b4321",
+            "nationality": "Indonesian"
         },
         "creator": {
             "@type": "Person",
             "name": "Rafa Atmaja"
         },
         "datePublished": "2025-07-11",
-        "dateModified": "2025-07-11",
-        "inLanguage": ["id", "en"],
-        "keywords": "Aksara Jawa Scanner, projek deep learning untuk mengenali aksara jawa menggunakan ResNet18. Aksara jawa konvertor"
+        "dateModified": "2025-07-23",
+        "keywords": "scanner aksara jawa, OCR aksara jawa, deep learning Indonesia, budaya jawa, hanacaraka, ResNet18, machine learning, pendidikan, digitalisasi budaya",
+        "about": {
+            "@type": "Thing",
+            "name": "Aksara Jawa",
+            "description": "Sistem tulisan tradisional Jawa yang digunakan untuk menulis bahasa Jawa",
+            "sameAs": "https://id.wikipedia.org/wiki/Aksara_Jawa"
+        },
+        "educationalUse": "Cultural Education, Language Learning, Historical Research",
+        "educationalLevel": "All Levels"
     }
     </script>
 
+    <!-- Breadcrumb Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Beranda",
+                "item": "https://www.nulisjawa.my.id"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Scanner Aksara Jawa",
+                "item": "https://www.nulisjawa.my.id"
+            }
+        ]
+    }
+    </script>
 
 </head>
 <body>
     <div class="container">
+
+        <!-- Language selector -->
         <div class="language-selector">
             <i class="fas fa-globe"></i>
-            <select id="languageSelector" onchange="changeLanguage(this.value)">
+            <select id="languageSelector" onchange="changeLanguage(this.value)" aria-label="Pilih Bahasa">
                 <option value="en">English</option>
-                <option value="id">Indonesia</option>
+                <option value="id">Bahasa Indonesia</option>
+                <option value="jv">Basa Jawa</option>
             </select>
         </div>
 
+        <!-- Page header -->
         <div class="header">
-            <h1 id="mainTitle">Aksara Jawa Scanner</h1>
-            <h2 id="mainSubtitle">Upload your Javanese script image for recognition</h2>
-            <p id="mainDisclaimer">Sorry, the site is currently under maintenance</p>
+            <h1 id="mainTitle">Scanner Aksara Jawa</h1>
+            <h2 id="mainSubtitle">Upload gambar tulisan aksara Jawa untuk dikonversi secara otomatis menggunakan deep learning</h2>
+            <p id="mainDescription">Tool gratis berbasis machine learning untuk mengenali dan mentransliterasi tulisan tangan aksara Jawa dengan akurasi tinggi menggunakan ResNet18.</p>
         </div>
 
+        <!-- Upload section -->
         <div class="upload-section" id="uploadSection">
             <div class="upload-icon">📸</div>
-            <div class="upload-text" id="uploadText">Drop your image here or click to browse</div>
-            <div class="upload-subtext" id="uploadSubtext">Supports JPG, PNG, WebP files</div>
+            <div class="upload-text" id="uploadText">Seret gambar aksara Jawa ke sini atau klik untuk memilih file</div>
+            <div class="upload-subtext" id="uploadSubtext">Mendukung format JPG, PNG, WebP (maksimal 10MB)</div>
             <input type="file" id="fileInput" class="file-input" accept="image/*">
-            <button class="btn" id="chooseFileBtn">Choose File</button>
-            <div class="upload-subtext" id="sampleSubtext">Or select from sample images</div>
-            <button class="sample-btn" id="sampleBtn">Image Samples</button>
+            <button class="btn" id="chooseFileBtn">Pilih File Gambar</button>
+            <div class="upload-subtext" id="sampleSubtext">Atau pilih dari contoh gambar aksara Jawa</div>
+            <button class="sample-btn" id="sampleBtn">Contoh Gambar Aksara Jawa</button>
         </div>
 
+        <!-- Sample section -->
         <section class="sample-section" id="sampleSection">
-            <h2 id="sampleHeader">Image samples</h2>
-            <p id="sampleDescription">Select an image sample to try</p>
+            <h2 id="sampleHeader">Contoh Gambar Aksara Jawa</h2>
+            <p id="sampleDescription">Pilih salah satu contoh gambar untuk mencoba scanner aksara Jawa</p>
             <div class="sample-grid" id="sampleGrid"></div>
             <button class="reset-btn" id="resetBtn1" onclick="resetInterface()">Reset</button>
         </section>
 
+        <!-- Uploaded or selected image preview-->
         <div class="preview-section" id="previewSection">
             <img id="imagePreview" class="image-preview" alt="Uploaded image preview">
             <div class="button-container">
-                <button class="btn" id="processBtn" onclick="processImage()">Process Image</button>
-                <button class="reset-btn" id="resetBtn1" onclick="resetInterface()">Reset</button>
+                <button class="btn" id="processBtn" onclick="processImage()">Proses Gambar</button>
+                <button class="reset-btn" id="resetBtn" onclick="resetInterface()">Kembali</button>
             </div>
         </div>
 
         <div class="processing" id="processingSection" style="display: none;">
             <div class="spinner"></div>
-            <p id="processingText">Processing your Javanese script...</p>
-            <p id="processingText2">Please be patient, startup process may take 30 seconds</p>
+            <p id="processingText">Sedang memproses gambar aksara Jawa Anda...</p>
+            <p id="processingText2">Mohon bersabar, proses startup dapat membutuhkan waktu 30 detik</p>
 
         </div>
 
         <div class="results-section" id="resultsSection">
             <div class="results-header">
-                <span id="resultsTitle">Recognition Results</span>
+                <h2 id="resultsTitle">Hasil Pengenalan</h2>
             </div>
             
             <div class="prediction-grid" id="predictionGrid">
             </div>
             
             <div class="button-container">
-                <button class="reset-btn" id="resetBtn2" onclick="resetInterface()">Back</button>
-                <button class="details-btn" id="detailsBtn" onclick="toggleDetailsSection()">Details</button>
+                <button class="reset-btn" id="resetBtn" onclick="resetInterface()">Kembali</button>
+                <button class="details-btn" id="detailsBtn" onclick="toggleDetailsSection()">Detail</button>
             </div>
         </div>
 
         <div class="details-section" id="detailsSection">
             <div class="details-header">
-                <span id="detailsTitle">Detailed Results</span>
+                <h3 id="detailsTitle">Detail Hasil Analisis</h3>
             </div>
-
-             <div class="">
-
-             </div>
 
             <div class="details-grid" id="detailsGrid">
                 <img id="bboxImage" style="display: none; max-width: 100%;">
             </div>
             
             <div class="button-container">
-                <button class="reset-btn" id="hideDetailsBtn" onclick="hideDetailsSection()">Hide Details</button>
+                <button class="reset-btn" id="hideDetailsBtn" onclick="hideDetailsSection()">Sembunyikan Detail</button>
             </div>
         </div>
 
         <section class="seo-content">
-            <h2 id="seoHeader">About aksara jawa scanner</h2>
-            <p id="seoParagraph1">
-                Aksara Jawa Scanner is an AI-powered tool specifically built to recognize and analyze handwritten Javanese script (Aksara Jawa).
-                Using deep learning technology with a ResNet18 architecture, the system can accurately identify traditional Javanese characters and provide their transliteration.
-            </p>
-            <p id="seoParagraph2">
-                Currently in beta version. More features and improvements are coming soon!
-                Check out my GitHub or social media below for feedback and contributions!
-            </p>
-            <h2 id="seoHeader2">About aksara jawa</h2>
-            <p id="seoParagraph3">
-                Aksara Jawa, also called Javanese script or Hanacaraka, is a traditional alphabet used long ago in Java, Indonesia. It was mainly used to write the Javanese language, and it has a unique look with rounded letters and special marks called sandhangan that change the sound of the characters. Aksara Jawa comes from ancient Indian scripts and is part of Indonesia's rich cultural history.
-            </p>
-            <p id="seoParagraph4">
-                While people don't use it in daily life anymore, you can still find it in books, schools, temples, monuments, and even on street signs in Central Java and Yogyakarta. Learning it is a great way to connect with Javanese heritage and keep the culture alive!
-            </p>
-
+            <article>
+                <h2 id="seoHeader">Tentang scanner aksara jawa</h2>
+                <p id="seoParagraph1">
+                    Scanner Aksara Jawa adalah alat berbasis deep learning yang dibuat khusus untuk mengenali dan menganalisis tulisan tangan Aksara Jawa.
+                    Menggunakan teknologi deep learning dengan arsitektur ResNet18, sistem ini dapat mengenali karakter-karakter tradisional Aksara Jawa dengan akurat dan memberikan transliterasinya.
+                </p>
+                <p id="seoParagraph2">
+                    Saat ini masih dalam versi beta, fitur dan peningkatan lainnya akan segera hadir!
+                    Kunjungi GitHub atau media sosialku di bawah untuk masukan dan kontribusi!
+                </p>
+                <h2 id="seoHeader2">Tentang aksara jawa</h2>
+                <p id="seoParagraph3">
+                    Aksara Jawa, atau yang juga dikenal dengan sebutan Hanacaraka, adalah huruf tradisional yang dulu digunakan di Pulau Jawa, Indonesia. Aksara ini digunakan untuk menulis bahasa Jawa dan memiliki bentuk huruf yang khas dan melengkung, serta tanda-tanda tambahan yang disebut sandhangan untuk mengubah bunyi huruf. Aksara Jawa berasal dari aksara kuno India dan merupakan bagian dari sejarah budaya Indonesia.
+                </p>
+                <p id="seoParagraph4">
+                    Meskipun sudah jarang dipakai sehari-hari, aksara ini masih bisa ditemukan di buku, pelajaran sekolah, candi, monumen, dan papan nama jalan di Jawa Tengah dan Yogyakarta. Belajar aksara Jawa adalah cara yang seru untuk mengenal warisan budaya dan menjaga tradisi tetap hidup.
+                </p>
+            </article>
         </section>
 
         <footer class="footer" id="footerSection">
