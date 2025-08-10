@@ -1,4 +1,4 @@
-# 🧠 Aksara Jawa Classifier
+# A Deep Learning-based Web API for Optical Character Recognition (OCR) of Javanese Script
 
 A lightweight Flask-based web API that classifies Javanese script (Aksara Jawa) using ONNX-optimized models.  
 Designed for speed, low memory usage, and easy integration into web frontends.
