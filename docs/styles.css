@@ -82,6 +82,15 @@
             font-weight: normal;
         }
 
+        .header h3 {
+            font-size: clamp(0.7rem, 1vw, 1rem);
+            color: #353030;
+            opacity: 0.5;
+            text-align: center;
+            margin-top: 10px;
+            font-weight: normal;
+        } 
+
         .header p {
             color: #718096;
             font-size: clamp(0.7rem, 1vw, 1rem);
@@ -565,6 +574,7 @@
                 margin-bottom: 30px;
                 padding-top: 40px;
             }
+
 
             .language-selector {
                 position: relative;

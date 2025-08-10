@@ -110,7 +110,7 @@
             // Update all text elements
             document.getElementById('mainTitle').textContent = t.mainTitle;
             document.getElementById('mainSubtitle').textContent = t.mainSubtitle;
-            // document.getElementById('mainDisclaimer').textContent = t.mainDisclaimer;
+            document.getElementById('mainDisclaimer').textContent = t.mainDisclaimer;
             document.getElementById('uploadText').textContent = t.uploadText;
             document.getElementById('uploadSubtext').textContent = t.uploadSubtext;
             document.getElementById('sampleSubtext').textContent = t.sampleSubtext;
